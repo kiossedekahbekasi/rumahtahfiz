@@ -2033,7 +2033,13 @@
     <label for="pfProjDesc">Deskripsi singkat</label>
     <input type="text" id="pfProjDesc" placeholder="Satu-dua kalimat tentang proyek ini">
     <label for="pfProjLink">Tautan (opsional)</label>
-    <input type="text" id="pfProjLink" placeholder="https://…">
+    <input type="text" id="pfProjLink" placeholder="https://… atau upload dokumen/foto di bawah">
+    <div class="modal-upload-row">
+      <button type="button" class="modal-upload-btn" id="pfProjLinkUploadBtn">📁 Upload dokumen/foto</button>
+      <input type="file" id="pfProjLinkFileInput" accept="image/*,.pdf,.doc,.docx" style="display:none;">
+      <button type="button" class="modal-upload-btn" id="pfProjLinkClearBtn">✕ Hapus tautan</button>
+    </div>
+    <p style="font-size:0.72rem; color:var(--ink-soft); margin:6px 0 0;">Tips: kalau upload dokumen/foto langsung, ukurannya harus cukup kecil supaya tersimpan ke database dan bisa dibuka pengunjung lain. Untuk file besar, lebih aman pakai tautan hosting (mis. Google Drive yang dibagikan publik).</p>
     <p class="modal-error" id="pfProjectError"></p>
     <div class="modal-actions">
       <button class="btn-ghost" id="pfProjectCancel">Batal</button>
@@ -2865,6 +2871,55 @@
   wireImageUpload('prodUploadBtn','prodFileInput','prodImage','prodImagePreview');
   wireImageUpload('pfProjUploadBtn','pfProjFileInput','pfProjImage','pfProjImagePreview');
   wireVideoUpload('pfProjVideoUploadBtn','pfProjVideoFileInput','pfProjVideo','pfProjVideoPreview');
+
+  // Upload dokumen/foto langsung untuk isi "Tautan" proyek (selain mengetik URL biasa)
+  const PF_LINK_SYNC_SAFE_LIMIT = 45000; // batas aman per sel Google Sheets
+  function wireGenericFileLinkUpload(btnId, fileInputId, urlInputId, clearBtnId){
+    const btn = document.getElementById(btnId);
+    const fileInput = document.getElementById(fileInputId);
+    const urlInput = document.getElementById(urlInputId);
+    const clearBtn = document.getElementById(clearBtnId);
+    if(!btn || !fileInput || !urlInput) return;
+    btn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files && fileInput.files[0];
+      if(!file) return;
+      const originalLabel = btn.textContent;
+      btn.disabled = true; btn.textContent = '⏳ Memproses file…';
+      try{
+        let dataUrl;
+        if(file.type.startsWith('image/')){
+          // Foto: dikompres otomatis seperti upload foto lainnya
+          dataUrl = await readFileAsOptimizedDataUrl(file, 1400, 0.8);
+        }else{
+          // Dokumen (PDF/Word dll): dibaca apa adanya
+          dataUrl = await readFileAsDataUrl(file);
+        }
+        if(dataUrl.length > PF_LINK_SYNC_SAFE_LIMIT){
+          const sizeKb = Math.round(file.size / 1024);
+          const proceed = confirm(
+            'File ini berukuran ~' + sizeKb + ' KB — terlalu besar untuk disimpan ke database.\n\n' +
+            'Jika dilanjutkan, tautan ini HANYA akan bisa dibuka di perangkat/browser ini saja. ' +
+            'Pengunjung lain TIDAK akan bisa membukanya.\n\n' +
+            'Saran: gunakan tautan hosting (mis. link Google Drive/Dropbox yang dibagikan publik) di kolom Tautan, bukan upload file langsung.\n\n' +
+            'Tetap gunakan file ini hanya untuk perangkat ini?'
+          );
+          if(!proceed){ fileInput.value = ''; btn.disabled = false; btn.textContent = originalLabel; return; }
+        }
+        urlInput.value = dataUrl;
+        urlInput.dispatchEvent(new Event('input', { bubbles:true }));
+      }catch(err){ alert('Gagal membaca file dari perangkat.'); }
+      btn.disabled = false; btn.textContent = originalLabel;
+      fileInput.value = '';
+    });
+    if(clearBtn){
+      clearBtn.addEventListener('click', () => {
+        urlInput.value = '';
+        urlInput.dispatchEvent(new Event('input', { bubbles:true }));
+      });
+    }
+  }
+  wireGenericFileLinkUpload('pfProjLinkUploadBtn','pfProjLinkFileInput','pfProjLink','pfProjLinkClearBtn');
   wireImageUpload('pfAvatarUploadBtn','pfAvatarFileInput','pfAvatarUrl','pfAvatarImagePreview', 500, 0.82);
   wireImageUpload('prodBgUploadBtn','prodBgFileInput','prodBgImage','prodBgImagePreview');
   wireImageUpload('pfProjBgUploadBtn','pfProjBgFileInput','pfProjBgImage','pfProjBgImagePreview');
