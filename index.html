@@ -746,9 +746,29 @@
   }
   body.edit-mode .product-cat-item .cat-delete{ display:flex; }
   .product-cat-item.active .cat-delete{ border-color:rgba(255,255,255,0.4); color:var(--white); }
-  .products-header{ display:flex; align-items:baseline; gap:10px; margin-bottom:16px; }
+  .products-header{ display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
   .products-header h2{ font-family:'Fraunces', serif; font-size:1.3rem; color:var(--ink-dark); font-weight:600; }
   .products-header .products-count{ font-size:0.78rem; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; }
+  .product-search-wrap{
+    margin-left:auto; display:flex; align-items:center; gap:6px;
+    background:var(--white); border:1px solid var(--line-strong); border-radius:20px;
+    padding:6px 12px; min-width:200px; max-width:280px; flex:1 1 200px;
+  }
+  .product-search-wrap .search-icon{ font-size:0.85rem; color:var(--ink-soft); flex-shrink:0; }
+  .product-search-wrap input{
+    border:none; outline:none; background:none; font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.85rem; color:var(--ink-dark); width:100%; padding:2px 0;
+  }
+  .product-search-wrap input::placeholder{ color:var(--ink-soft); }
+  .product-search-clear{
+    border:none; background:none; color:var(--ink-soft); cursor:pointer; font-size:0.8rem;
+    padding:0; display:none; flex-shrink:0;
+  }
+  .product-search-wrap.has-value .product-search-clear{ display:flex; }
+  .product-search-empty{
+    display:none; padding:40px 10px; text-align:center; color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace; font-size:0.82rem; grid-column:1 / -1;
+  }
   .products-wrap{ flex:1; overflow-y:auto; padding:22px 30px 40px; min-width:0; }
   .product-grid{
     display:grid;
@@ -1504,8 +1524,14 @@
           <div class="products-header">
             <h2 id="productCatHeading">Semua Produk</h2>
             <span class="products-count" id="productCatCount"></span>
+            <div class="product-search-wrap" id="productSearchWrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="productSearchInput" placeholder="Cari nama produk atau lokasi…">
+              <button type="button" class="product-search-clear" id="productSearchClearBtn" title="Hapus pencarian">✕</button>
+            </div>
           </div>
           <div class="product-grid" id="productGrid"></div>
+          <div class="product-search-empty" id="productSearchEmpty">Tidak ada produk yang cocok dengan pencarian.</div>
         </div>
       </div>
     </section>
@@ -2315,6 +2341,7 @@
     { id:'lainnya', label:'Lainnya', icon:'📦' },
   ];
   let activeProductCategory = 'all';
+  let productSearchQuery = '';
   function loadProductCategories(){
     const v = loadSyncedSetting('productCategories', x => Array.isArray(x) && x.length);
     if(v) productCategories = v;
@@ -3086,10 +3113,22 @@
     renderProductCatList();
     const heading = document.getElementById('productCatHeading');
     const countEl = document.getElementById('productCatCount');
-    const filtered = activeProductCategory === 'all' ? products : products.filter(p => (p.category || 'lainnya') === activeProductCategory);
+    let filtered = activeProductCategory === 'all' ? products : products.filter(p => (p.category || 'lainnya') === activeProductCategory);
+    const q = productSearchQuery.trim().toLowerCase();
+    if(q){
+      filtered = filtered.filter(p => {
+        const haystack = [
+          p.name || '',
+          p.location || '',
+          categoryLabel(p.category || 'lainnya')
+        ].join(' ').toLowerCase();
+        return haystack.includes(q);
+      });
+    }
     heading.textContent = activeProductCategory === 'all' ? 'Semua Produk' : categoryLabel(activeProductCategory);
-    countEl.textContent = filtered.length + ' produk';
+    countEl.textContent = filtered.length + ' produk' + (q ? (' — hasil untuk "' + q + '"') : '');
     const grid = document.getElementById('productGrid');
+    const emptyEl = document.getElementById('productSearchEmpty');
     grid.innerHTML = '';
     filtered.forEach(p => grid.appendChild(renderProductCard(p)));
     if(editMode){
@@ -3099,6 +3138,7 @@
       tile.addEventListener('click', () => openProductModal(null));
       grid.appendChild(tile);
     }
+    if(emptyEl) emptyEl.style.display = (filtered.length === 0 && q) ? 'block' : 'none';
   }
 
   function renderProductCard(p){
@@ -3242,6 +3282,32 @@
     saveProductCategories();
     renderProducts();
   });
+
+  // ---------- Pencarian produk ----------
+  // Filter ini bekerja langsung di atas array `products`, yaitu data yang sama
+  // yang dimuat dari database lewat loadProductsFromSheet(), jadi pencariannya
+  // selalu mencakup SEMUA produk yang sudah tersinkron dari server, bukan cuma
+  // yang kebetulan sedang tampil di layar.
+  const productSearchInput = document.getElementById('productSearchInput');
+  const productSearchWrap = document.getElementById('productSearchWrap');
+  const productSearchClearBtn = document.getElementById('productSearchClearBtn');
+  const debouncedProductSearch = debounce(() => {
+    productSearchQuery = productSearchInput.value;
+    productSearchWrap.classList.toggle('has-value', !!productSearchQuery.trim());
+    renderProducts();
+  }, 200);
+  if(productSearchInput){
+    productSearchInput.addEventListener('input', debouncedProductSearch);
+  }
+  if(productSearchClearBtn){
+    productSearchClearBtn.addEventListener('click', () => {
+      productSearchInput.value = '';
+      productSearchQuery = '';
+      productSearchWrap.classList.remove('has-value');
+      renderProducts();
+      productSearchInput.focus();
+    });
+  }
 
   // ---------- Toolbar format teks (font, ukuran, warna, bold, italic, underline) ----------
   // Berlaku untuk SEMUA elemen .editable-field di seluruh dasbor, bukan hanya di Portofolio.
