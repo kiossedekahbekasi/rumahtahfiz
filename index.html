@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kios Sedekah — Dasbor Proyek</title>
+<link rel="icon" id="faviconLink" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23201f1d'/%3E%3Crect x='9' y='9' width='14' height='14' rx='3' fill='%232f6e73' transform='rotate(45 16 16)'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -2953,13 +2954,17 @@
   wireImageUpload('pfHeroBgUploadBtn','pfHeroBgFileInput','pfHeroBgImage','pfHeroBgImagePreview', 1400, 0.75);
   wireImageUpload('inputImageUploadBtn','inputImageFileInput','inputImage','inputImagePreview');
 
-  // ---------- Logo/foto brand di sidebar (tampil di semua dasbor) ----------
+  // ---------- Logo/foto brand di sidebar (tampil di semua dasbor) + favicon tab browser ----------
   function applyBrandLogo(){
     const logo = loadSyncedSetting('brandLogo', x => typeof x === 'string' && x) || '';
     const shape = document.getElementById('brandMarkShape');
     const img = document.getElementById('brandLogoImg');
     if(logo){ img.src = logo; img.style.display = 'block'; shape.style.display = 'none'; }
     else{ img.style.display = 'none'; shape.style.display = 'block'; }
+    // Favicon (ikon di tab browser) memakai logo yang sama; kalau belum ada logo,
+    // dipakai ikon bawaan (kotak teal) supaya tab tidak tampil globe polos.
+    const faviconLink = document.getElementById('faviconLink');
+    if(faviconLink && logo) faviconLink.href = logo;
   }
   document.getElementById('brandLogoEditBtn').addEventListener('click', () => document.getElementById('brandLogoFileInput').click());
   document.getElementById('brandLogoFileInput').addEventListener('change', async () => {
