@@ -466,6 +466,20 @@
   }
   .topbar-right{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
 
+  .cart-fab-btn{
+    position:relative; display:flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono', monospace; font-size:0.8rem;
+    background:var(--accent-teal); color:var(--white); border:none;
+    padding:8px 13px; border-radius:20px; cursor:pointer;
+  }
+  .cart-fab-btn:hover{ background:var(--accent-teal-dark); }
+  .cart-badge{
+    position:absolute; top:-6px; right:-6px; min-width:18px; height:18px; padding:0 4px;
+    background:var(--accent-clay); color:var(--white); border-radius:10px;
+    font-size:0.62rem; display:flex; align-items:center; justify-content:center;
+    border:2px solid var(--paper);
+  }
+
   .user-chip{
     display:flex; align-items:center; gap:8px;
     font-family:'IBM Plex Mono', monospace;
@@ -1148,6 +1162,40 @@
     font-family:'IBM Plex Sans', sans-serif; font-size:0.85rem; background:var(--white); color:var(--ink-dark);
   }
   .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:22px; }
+
+  /* Modal Keranjang Belanja */
+  .cart-items-list{ display:flex; flex-direction:column; gap:0; max-height:300px; overflow-y:auto; margin-top:4px; }
+  .cart-item-row{ display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); }
+  .cart-item-row:last-child{ border-bottom:none; }
+  .cart-item-img{ width:44px; height:44px; border-radius:6px; object-fit:cover; border:1px solid var(--line-strong); flex-shrink:0; background:var(--line); }
+  .cart-item-info{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+  .cart-item-name{ font-size:0.82rem; color:var(--ink-dark); font-weight:500; line-height:1.3; }
+  .cart-item-price{ font-size:0.72rem; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; }
+  .cart-item-qty{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .cart-item-qty button{
+    width:22px; height:22px; border-radius:50%; border:1px solid var(--line-strong); background:var(--white);
+    color:var(--ink-dark); cursor:pointer; font-size:0.75rem; display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .cart-item-qty button:hover{ border-color:var(--accent-teal); color:var(--accent-teal-dark); }
+  .cart-item-qty span{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; min-width:16px; text-align:center; }
+  .cart-item-remove{
+    flex-shrink:0; border:none; background:none; color:var(--accent-clay); cursor:pointer; font-size:0.72rem; padding:2px;
+  }
+  .cart-empty{ padding:30px 10px; text-align:center; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-size:0.82rem; }
+  .cart-summary-box{ margin-top:14px; padding-top:12px; border-top:2px solid var(--ink-dark); }
+  .cart-summary-row{ display:flex; justify-content:space-between; font-size:0.83rem; color:var(--ink-mid); padding:3px 0; }
+  .cart-summary-row.cart-summary-total{ font-weight:600; color:var(--ink-dark); font-size:0.95rem; padding-top:6px; }
+  .cart-ongkir-note{ font-size:0.7rem; color:var(--ink-soft); margin:8px 0 0; line-height:1.5; }
+  .cart-payment-list{ display:flex; flex-direction:column; gap:8px; margin-top:10px; }
+  .cart-payment-option{
+    display:flex; align-items:center; gap:12px; padding:10px 12px; border:1px solid var(--line-strong);
+    border-radius:8px; cursor:pointer; background:var(--paper-card);
+  }
+  .cart-payment-option:hover{ border-color:var(--accent-teal); }
+  .cart-payment-option.selected{ border-color:var(--accent-teal); background:rgba(47,110,115,0.08); }
+  .cart-payment-option input{ width:auto; flex-shrink:0; }
+  .cart-payment-option .payment-method-icon{ width:30px; height:30px; font-size:0.9rem; }
+  .cart-payment-option .payment-method-name{ font-size:0.83rem; }
   .modal-error{ font-size:0.75rem; color:var(--accent-clay); margin:8px 0 0; display:none; }
   .modal-upload-row{ display:flex; align-items:center; gap:10px; margin-top:6px; }
   .modal-img-preview{
@@ -1467,6 +1515,9 @@
         </div>
       </div>
       <div class="topbar-right">
+        <button type="button" class="cart-fab-btn" id="cartOpenBtn" title="Lihat keranjang belanja">
+          🛒 Keranjang<span class="cart-badge" id="cartBadgeCount" style="display:none;">0</span>
+        </button>
         <button class="invite-btn" id="publicLoginBtn">Masuk</button>
         <div class="user-chip" id="userChip" style="display:none;"></div>
         <button class="invite-btn danger" id="logoutBtn" style="display:none;">Keluar</button>
@@ -1700,6 +1751,31 @@
             <div class="settings-row-body" style="margin-left:0; flex-direction:column; align-items:stretch;">
               <div class="payment-method-list" id="paymentMethodList"></div>
               <button type="button" class="field-add-btn" id="paymentAddBtn">+ Tambah Metode Pembayaran</button>
+            </div>
+          </div>
+          <div class="settings-row settings-row-expand" data-row-id="keranjang" data-locked="1">
+            <div class="settings-row-head">
+              <span class="settings-icon editable-field">🛵</span>
+              <span class="settings-label editable-field">Keranjang & Ongkos Kirim</span>
+            </div>
+            <div class="settings-row-body" style="margin-left:0; flex-direction:column; align-items:stretch; gap:0;">
+              <div class="field-row">
+                <span class="field-row-label" style="flex:0 0 46%;">Nomor WhatsApp Admin</span>
+                <input type="text" id="cartWaNumberInput" placeholder="mis. 6281234567890" style="flex:1; padding:8px 10px; border:1px solid var(--line-strong); border-radius:5px; font-family:'IBM Plex Sans', sans-serif; font-size:0.85rem; background:var(--white); color:var(--ink-dark);">
+              </div>
+              <div class="field-row">
+                <span class="field-row-label" style="flex:0 0 46%;">Minimal belanja gratis ongkir (Rp)</span>
+                <input type="number" id="cartFreeOngkirMinInput" placeholder="50000" style="flex:1; padding:8px 10px; border:1px solid var(--line-strong); border-radius:5px; font-family:'IBM Plex Sans', sans-serif; font-size:0.85rem; background:var(--white); color:var(--ink-dark);">
+              </div>
+              <div class="field-row">
+                <span class="field-row-label" style="flex:0 0 46%;">Ongkir di bawah minimal (Rp)</span>
+                <input type="number" id="cartOngkirFeeInput" placeholder="5000" style="flex:1; padding:8px 10px; border:1px solid var(--line-strong); border-radius:5px; font-family:'IBM Plex Sans', sans-serif; font-size:0.85rem; background:var(--white); color:var(--ink-dark);">
+              </div>
+              <div class="field-row" style="flex-direction:column; align-items:stretch; gap:6px;">
+                <span class="field-row-label">Catatan area gratis ongkir</span>
+                <input type="text" id="cartRadiusNoteInput" placeholder="mis. Gratis ongkir untuk radius maksimal 3 km dari toko" style="width:100%; padding:8px 10px; border:1px solid var(--line-strong); border-radius:5px; font-family:'IBM Plex Sans', sans-serif; font-size:0.85rem; background:var(--white); color:var(--ink-dark);">
+              </div>
+              <p style="font-size:0.7rem; color:var(--ink-soft); margin:8px 0 0; line-height:1.5;">Angka & nomor ini dipakai otomatis saat pengunjung checkout dari Keranjang: kalau subtotal belanja sudah mencapai angka "Minimal belanja gratis ongkir", ongkir otomatis Rp 0. Kalau belum, ongkir memakai angka "Ongkir di bawah minimal". Pesanan akan dikirim sebagai pesan WhatsApp ke nomor di atas.</p>
             </div>
           </div>
           <div class="settings-row settings-row-expand" data-row-id="notifikasi" data-locked="1">
@@ -2127,7 +2203,38 @@
   </div>
 </div>
 
+<!-- MODAL KERANJANG BELANJA & CHECKOUT -->
+<div class="modal-overlay" id="cartOverlay">
+  <div class="modal" style="width:420px;">
+    <h3>🛒 Keranjang Belanja</h3>
+    <div id="cartListView">
+      <div class="cart-items-list" id="cartItemsList"></div>
+      <div class="cart-empty" id="cartEmptyMsg" style="display:none;">Keranjang masih kosong. Yuk tambahkan produk dulu!</div>
+      <div class="cart-summary-box" id="cartSummaryBox" style="display:none;">
+        <div class="cart-summary-row"><span>Subtotal</span><span id="cartSubtotalVal">Rp 0</span></div>
+        <div class="cart-summary-row"><span>Ongkos kirim</span><span id="cartOngkirVal">Rp 0</span></div>
+        <div class="cart-summary-row cart-summary-total"><span>Total</span><span id="cartTotalVal">Rp 0</span></div>
+        <p class="cart-ongkir-note" id="cartOngkirNote"></p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="cartCloseBtn">Tutup</button>
+        <button class="btn-primary" id="cartCheckoutBtn">Pesan Sekarang</button>
+      </div>
+    </div>
+    <div id="cartPaymentView" style="display:none;">
+      <p style="font-size:0.82rem; color:var(--ink-mid); margin:0 0 4px;">Pilih metode pembayaran, lalu pesanan akan dikirim ke WhatsApp admin:</p>
+      <div class="cart-payment-list" id="cartPaymentList"></div>
+      <p class="modal-error" id="cartPaymentError"></p>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="cartPaymentBackBtn">← Kembali</button>
+        <button class="btn-primary" id="cartPaymentConfirmBtn">Konfirmasi & Kirim ke WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+
 (function(){
   // =====================================================================
   // KONFIGURASI — tempel URL Web App Apps Script di sini agar database
@@ -2352,7 +2459,224 @@
   }
   loadProductCategories();
 
-  let cartCount = 0;
+  // ---------- Keranjang belanja ----------
+  // Isi keranjang bersifat per-pengunjung/per-perangkat (disimpan di localStorage saja,
+  // TIDAK disinkronkan lewat AppSettings) — supaya keranjang tiap pembeli tidak tercampur
+  // satu sama lain. Yang disinkronkan ke semua pengunjung lewat cartSettings hanyalah
+  // ANGKA & NOMOR yang diatur admin (nomor WhatsApp, minimal gratis ongkir, biaya ongkir,
+  // catatan radius area) supaya perhitungan ongkir konsisten untuk semua orang.
+  let cart = [];
+  function loadCart(){
+    try{
+      const raw = localStorage.getItem('shopCart');
+      const parsed = raw ? JSON.parse(raw) : [];
+      cart = Array.isArray(parsed) ? parsed : [];
+    }catch(err){ cart = []; }
+  }
+  function saveCart(){
+    try{ localStorage.setItem('shopCart', JSON.stringify(cart)); }catch(err){}
+  }
+  loadCart();
+
+  let cartSettings = {
+    waNumber:'6289505670423',
+    freeOngkirMin:50000,
+    ongkirFee:5000,
+    radiusNote:'Gratis ongkir berlaku untuk area dalam radius maksimal 3 km dari toko.'
+  };
+  function renderCartSettingsForm(){
+    const waEl = document.getElementById('cartWaNumberInput');
+    const minEl = document.getElementById('cartFreeOngkirMinInput');
+    const feeEl = document.getElementById('cartOngkirFeeInput');
+    const noteEl = document.getElementById('cartRadiusNoteInput');
+    if(waEl) waEl.value = cartSettings.waNumber || '';
+    if(minEl) minEl.value = cartSettings.freeOngkirMin || 0;
+    if(feeEl) feeEl.value = cartSettings.ongkirFee || 0;
+    if(noteEl) noteEl.value = cartSettings.radiusNote || '';
+  }
+  function loadCartSettings(){
+    const saved = loadSyncedSetting('cartSettings', x => x && typeof x === 'object');
+    if(saved) cartSettings = Object.assign({}, cartSettings, saved);
+    renderCartSettingsForm();
+  }
+  function saveCartSettingsForm(){
+    const wa = document.getElementById('cartWaNumberInput').value.trim();
+    const freeMin = Number(document.getElementById('cartFreeOngkirMinInput').value) || 0;
+    const fee = Number(document.getElementById('cartOngkirFeeInput').value) || 0;
+    const note = document.getElementById('cartRadiusNoteInput').value.trim();
+    cartSettings = { waNumber: wa || cartSettings.waNumber, freeOngkirMin: freeMin, ongkirFee: fee, radiusNote: note };
+    persistSetting('cartSettings', cartSettings);
+  }
+  loadCartSettings();
+  wireAutoSave(['cartWaNumberInput','cartFreeOngkirMinInput','cartOngkirFeeInput','cartRadiusNoteInput'], saveCartSettingsForm);
+
+  function waLinkNumber(raw){
+    let n = (raw || '').toString().replace(/[^0-9]/g, '');
+    if(n.startsWith('0')) n = '62' + n.slice(1);
+    return n;
+  }
+
+  function cartTotalQty(){ return cart.reduce((sum,i)=>sum+i.qty,0); }
+  function renderCartBadge(){
+    const badge = document.getElementById('cartBadgeCount');
+    if(!badge) return;
+    const qty = cartTotalQty();
+    badge.textContent = qty;
+    badge.style.display = qty > 0 ? 'flex' : 'none';
+  }
+  function addToCart(product){
+    const existing = cart.find(i => i.id === product.id);
+    if(existing) existing.qty += 1;
+    else cart.push({ id: product.id, name: product.name, price: Number(product.price) || 0, imageUrl: product.imageUrl || '', qty: 1 });
+    saveCart();
+    renderCartBadge();
+  }
+  function changeCartQty(id, delta){
+    const item = cart.find(i => i.id === id);
+    if(!item) return;
+    item.qty += delta;
+    if(item.qty <= 0) cart = cart.filter(i => i.id !== id);
+    saveCart();
+    renderCartBadge();
+    renderCartItems();
+  }
+  function removeFromCart(id){
+    cart = cart.filter(i => i.id !== id);
+    saveCart();
+    renderCartBadge();
+    renderCartItems();
+  }
+  function computeCartTotals(){
+    const subtotal = cart.reduce((sum,i)=>sum + (i.price * i.qty), 0);
+    const ongkir = subtotal === 0 ? 0 : (subtotal >= (cartSettings.freeOngkirMin || 0) ? 0 : (cartSettings.ongkirFee || 0));
+    return { subtotal, ongkir, total: subtotal + ongkir };
+  }
+  function renderCartItems(){
+    const listEl = document.getElementById('cartItemsList');
+    const emptyEl = document.getElementById('cartEmptyMsg');
+    const summaryEl = document.getElementById('cartSummaryBox');
+    const checkoutBtn = document.getElementById('cartCheckoutBtn');
+    if(!listEl) return;
+    listEl.innerHTML = '';
+    if(cart.length === 0){
+      emptyEl.style.display = 'block';
+      summaryEl.style.display = 'none';
+      if(checkoutBtn) checkoutBtn.disabled = true;
+      return;
+    }
+    emptyEl.style.display = 'none';
+    summaryEl.style.display = 'block';
+    if(checkoutBtn) checkoutBtn.disabled = false;
+    cart.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'cart-item-row';
+      row.innerHTML = `
+        <img class="cart-item-img" src="${escapeHtml(item.imageUrl || 'https://placehold.co/100x100?text=Produk')}" alt="" onerror="this.onerror=null;this.src='https://placehold.co/100x100?text=Produk';">
+        <div class="cart-item-info">
+          <span class="cart-item-name">${escapeHtml(item.name)}</span>
+          <span class="cart-item-price">${formatRupiah(item.price)} x ${item.qty} = ${formatRupiah(item.price * item.qty)}</span>
+        </div>
+        <div class="cart-item-qty">
+          <button type="button" class="cart-qty-minus" title="Kurangi">−</button>
+          <span>${item.qty}</span>
+          <button type="button" class="cart-qty-plus" title="Tambah">+</button>
+        </div>
+        <button type="button" class="cart-item-remove" title="Hapus dari keranjang">✕</button>`;
+      row.querySelector('.cart-qty-minus').addEventListener('click', () => changeCartQty(item.id, -1));
+      row.querySelector('.cart-qty-plus').addEventListener('click', () => changeCartQty(item.id, 1));
+      row.querySelector('.cart-item-remove').addEventListener('click', () => removeFromCart(item.id));
+      listEl.appendChild(row);
+    });
+    const totals = computeCartTotals();
+    document.getElementById('cartSubtotalVal').textContent = formatRupiah(totals.subtotal);
+    document.getElementById('cartOngkirVal').textContent = totals.ongkir === 0 ? 'Gratis' : formatRupiah(totals.ongkir);
+    document.getElementById('cartTotalVal').textContent = formatRupiah(totals.total);
+    const noteEl = document.getElementById('cartOngkirNote');
+    if(noteEl){
+      if(totals.subtotal >= (cartSettings.freeOngkirMin || 0)){
+        noteEl.textContent = '🎉 Pesananmu dapat gratis ongkir. ' + (cartSettings.radiusNote || '');
+      }else{
+        const kurang = (cartSettings.freeOngkirMin || 0) - totals.subtotal;
+        noteEl.textContent = 'Belanja ' + formatRupiah(kurang) + ' lagi untuk gratis ongkir. ' + (cartSettings.radiusNote || '');
+      }
+    }
+  }
+
+  function openCartModal(){
+    renderCartItems();
+    document.getElementById('cartListView').style.display = 'block';
+    document.getElementById('cartPaymentView').style.display = 'none';
+    document.getElementById('cartOverlay').classList.add('open');
+  }
+  document.getElementById('cartOpenBtn').addEventListener('click', openCartModal);
+  document.getElementById('cartCloseBtn').addEventListener('click', () => document.getElementById('cartOverlay').classList.remove('open'));
+  document.getElementById('cartOverlay').addEventListener('click', (e) => { if(e.target.id === 'cartOverlay') e.target.classList.remove('open'); });
+
+  let selectedCartPaymentId = null;
+  function renderCartPaymentOptions(){
+    const wrap = document.getElementById('cartPaymentList');
+    wrap.innerHTML = '';
+    const enabled = (paymentMethods || []).filter(pm => pm.enabled);
+    if(enabled.length === 0){
+      wrap.innerHTML = '<p style="font-size:0.8rem;color:var(--ink-soft);">Belum ada metode pembayaran aktif. Admin bisa mengaturnya di Pengaturan &gt; Metode Pembayaran.</p>';
+      selectedCartPaymentId = null;
+      return;
+    }
+    enabled.forEach((pm, i) => {
+      const opt = document.createElement('label');
+      opt.className = 'cart-payment-option' + (i === 0 ? ' selected' : '');
+      const iconInner = pm.icon ? `<img src="${escapeHtml(pm.icon)}" alt="">` : escapeHtml(pm.emoji || '💳');
+      opt.innerHTML = `
+        <input type="radio" name="cartPaymentChoice" value="${pm.id}" ${i === 0 ? 'checked' : ''}>
+        <div class="payment-method-icon">${iconInner}</div>
+        <span class="payment-method-name">${escapeHtml(pm.name)}</span>`;
+      opt.addEventListener('click', () => {
+        wrap.querySelectorAll('.cart-payment-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        selectedCartPaymentId = pm.id;
+      });
+      wrap.appendChild(opt);
+    });
+    selectedCartPaymentId = enabled[0].id;
+  }
+  document.getElementById('cartCheckoutBtn').addEventListener('click', () => {
+    if(cart.length === 0) return;
+    renderCartPaymentOptions();
+    document.getElementById('cartPaymentError').style.display = 'none';
+    document.getElementById('cartListView').style.display = 'none';
+    document.getElementById('cartPaymentView').style.display = 'block';
+  });
+  document.getElementById('cartPaymentBackBtn').addEventListener('click', () => {
+    document.getElementById('cartPaymentView').style.display = 'none';
+    document.getElementById('cartListView').style.display = 'block';
+  });
+  document.getElementById('cartPaymentConfirmBtn').addEventListener('click', () => {
+    if(!selectedCartPaymentId){
+      const err = document.getElementById('cartPaymentError');
+      err.textContent = 'Pilih metode pembayaran dulu.'; err.style.display = 'block';
+      return;
+    }
+    const pm = (paymentMethods || []).find(p => p.id === selectedCartPaymentId);
+    const totals = computeCartTotals();
+    let msg = 'Halo, saya ingin memesan:\n';
+    cart.forEach((item, i) => {
+      msg += (i+1) + '. ' + item.name + ' x' + item.qty + ' = ' + formatRupiah(item.price * item.qty) + '\n';
+    });
+    msg += '\nSubtotal: ' + formatRupiah(totals.subtotal);
+    msg += '\nOngkir: ' + (totals.ongkir === 0 ? 'Gratis' : formatRupiah(totals.ongkir));
+    msg += '\nTotal: ' + formatRupiah(totals.total);
+    msg += '\n\nMetode pembayaran: ' + (pm ? pm.name : '-');
+    if(cartSettings.radiusNote) msg += '\n\nCatatan: ' + cartSettings.radiusNote;
+    const waNum = waLinkNumber(cartSettings.waNumber);
+    const url = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg);
+    cart = [];
+    saveCart();
+    renderCartBadge();
+    document.getElementById('cartOverlay').classList.remove('open');
+    window.open(url, '_blank');
+  });
+
+  renderCartBadge();
   let editMode = false;
 
   let portfolioProfile = {
@@ -3180,9 +3504,12 @@
       e.currentTarget.classList.toggle('active');
       e.currentTarget.textContent = e.currentTarget.classList.contains('active') ? '♥ wishlist' : '♡ wishlist';
     });
-    card.querySelector('.cart-btn').addEventListener('click', () => {
-      cartCount++;
-      alert('Ditambahkan ke keranjang (' + cartCount + ')');
+    card.querySelector('.cart-btn').addEventListener('click', (e) => {
+      addToCart(p);
+      const btn = e.currentTarget;
+      const original = btn.textContent;
+      btn.textContent = '✓ Ditambahkan';
+      setTimeout(() => { btn.textContent = original; }, 1000);
     });
     const editBtn = card.querySelector('.edit-btn');
     const delBtn = card.querySelector('.del-btn');
@@ -5290,6 +5617,7 @@
     loadSettingsMenu();
     loadAccountProfile();
     renderAccountProfile();
+    loadCartSettings();
   });
 
   // ---------- Tampilan publik (belum masuk): muat Produk & Portofolio langsung ----------
