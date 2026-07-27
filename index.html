@@ -490,6 +490,36 @@
   /* ---------- MAIN ---------- */
   .main{ background:var(--paper); display:flex; flex-direction:column; min-width:0; position:relative; }
 
+  /* ---------- Transisi "pintu tirai" saat pindah menu sidebar ---------- */
+  .curtain-doors{
+    position:absolute; inset:0; z-index:80;
+    display:flex; visibility:hidden; pointer-events:none;
+  }
+  .curtain-doors.running{ visibility:visible; pointer-events:auto; }
+  .curtain-panel{
+    flex:1 1 50%; height:100%; position:relative; overflow:hidden;
+    background:linear-gradient(155deg, #26241f 0%, #201f1d 55%, #1a1917 100%);
+    box-shadow:0 0 50px rgba(0,0,0,0.45);
+  }
+  .curtain-panel::before{
+    content:''; position:absolute; top:0; bottom:0; width:2px;
+    background:linear-gradient(var(--accent-teal), var(--accent-teal-dark));
+    opacity:0.9;
+  }
+  .curtain-left{ transform:translateX(-100%); }
+  .curtain-left::before{ right:0; }
+  .curtain-right{ transform:translateX(100%); }
+  .curtain-right::before{ left:0; }
+  .curtain-mark{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:34px; height:34px; border-radius:8px; background:var(--accent-teal);
+    opacity:0; transition:opacity 0.15s ease;
+  }
+  .curtain-doors.running .curtain-mark{ opacity:1; }
+  @media (prefers-reduced-motion: reduce){
+    .curtain-panel{ transition:none !important; }
+  }
+
   .topbar{
     display:flex;
     align-items:center;
@@ -1816,6 +1846,11 @@
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <main class="main">
+    <div class="curtain-doors" id="curtainDoors" aria-hidden="true">
+      <div class="curtain-panel curtain-left"></div>
+      <div class="curtain-panel curtain-right"></div>
+      <div class="curtain-mark"></div>
+    </div>
     <header class="topbar">
       <div class="project-info" style="flex-direction:row; align-items:center; gap:12px;">
         <button type="button" class="menu-toggle-btn" id="menuToggleBtn" title="Buka menu" aria-label="Buka menu">☰</button>
@@ -5647,13 +5682,55 @@
     document.getElementById('viewPortfolio').classList.toggle('active', target === 'portfolio');
     document.getElementById('viewSettings').classList.toggle('active', target === 'settings');
   }
+
+  // Efek transisi "pintu tirai": dua panel meluncur dari kiri & kanan menutup
+  // konten, mengganti tampilan saat tertutup penuh, lalu membuka kembali.
+  const curtainDoorsEl = document.getElementById('curtainDoors');
+  const curtainLeftEl = curtainDoorsEl ? curtainDoorsEl.querySelector('.curtain-left') : null;
+  const curtainRightEl = curtainDoorsEl ? curtainDoorsEl.querySelector('.curtain-right') : null;
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function runDoorsTransition(swapFn){
+    if(!curtainDoorsEl || !curtainLeftEl || !curtainRightEl || prefersReducedMotion){
+      swapFn();
+      return;
+    }
+    const closeEasing = 'cubic-bezier(0.65, 0, 0.35, 1)';
+    curtainDoorsEl.classList.add('running');
+    const closeLeft = curtainLeftEl.animate(
+      [{ transform:'translateX(-100%)' }, { transform:'translateX(0%)' }],
+      { duration:340, easing:closeEasing, fill:'forwards' }
+    );
+    const closeRight = curtainRightEl.animate(
+      [{ transform:'translateX(100%)' }, { transform:'translateX(0%)' }],
+      { duration:340, easing:closeEasing, fill:'forwards' }
+    );
+    Promise.all([closeLeft.finished, closeRight.finished]).then(() => {
+      swapFn();
+      const openLeft = curtainLeftEl.animate(
+        [{ transform:'translateX(0%)' }, { transform:'translateX(-100%)' }],
+        { duration:380, easing:closeEasing, fill:'forwards', delay:80 }
+      );
+      const openRight = curtainRightEl.animate(
+        [{ transform:'translateX(0%)' }, { transform:'translateX(100%)' }],
+        { duration:380, easing:closeEasing, fill:'forwards', delay:80 }
+      );
+      Promise.all([openLeft.finished, openRight.finished]).then(() => {
+        curtainDoorsEl.classList.remove('running');
+        closeLeft.cancel(); closeRight.cancel();
+        openLeft.cancel(); openRight.cancel();
+      });
+    });
+  }
+
   document.querySelectorAll('.nav-tab').forEach(tab => {
     tab.addEventListener('click', (e) => {
       if(e.target.closest('.nav-label') && e.target.isContentEditable) return;
       if(e.target.closest('.nav-reorder')) return;
       const adminOnlyViews = ['settings', 'board'];
       if(adminOnlyViews.includes(tab.dataset.view) && (!currentUser || currentUser.role !== 'admin')) return;
-      switchView(tab.dataset.view);
+      if(tab.classList.contains('active')){ closeMobileSidebar(); return; }
+      runDoorsTransition(() => switchView(tab.dataset.view));
       // Saat membuka tab Portofolio, segarkan langsung dari database supaya
       // editan terbaru dari admin terlihat tanpa harus menunggu jadwal otomatis.
       if(tab.dataset.view === 'portfolio' && currentUser && !(currentUser.role === 'admin' && editMode)){
