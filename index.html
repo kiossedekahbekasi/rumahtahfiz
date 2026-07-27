@@ -2670,6 +2670,41 @@
   </div>
 </div>
 
+<!-- MODAL GANTI FOTO LATAR HERO PORTOFOLIO BARU (KIOS) -->
+<div class="modal-overlay" id="pfnHeroBgOverlay">
+  <div class="modal">
+    <h3>Ganti foto latar</h3>
+    <label for="pfnHeroBgUrlInput">URL gambar</label>
+    <input type="text" id="pfnHeroBgUrlInput" placeholder="https://…">
+    <div class="modal-upload-row">
+      <img class="modal-img-preview" id="pfnHeroBgModalPreview" src="" alt="Pratinjau" style="display:none;">
+      <button type="button" class="modal-upload-btn" id="pfnHeroBgModalUploadBtn">📁 Upload dari perangkat</button>
+      <input type="file" id="pfnHeroBgModalFileInput" accept="image/*" style="display:none;">
+    </div>
+    <p style="font-size:0.7rem; color:var(--ink-soft); margin:6px 0 0; line-height:1.5;">
+      Tips kualitas: foto yang di-upload langsung otomatis dikecilkan supaya muat di database (maks ±45 KB per sel). Untuk hasil paling tajam/HD, isi kolom URL dengan link foto yang sudah di-hosting di tempat lain (mis. Google Drive/Imgur yang dibagikan publik) — foto lewat URL tidak dikompres sama sekali.
+    </p>
+    <label for="pfnHeroBgPositionInput" style="margin-top:14px;">Posisi foto latar</label>
+    <select id="pfnHeroBgPositionInput">
+      <option value="left top">Kiri atas</option>
+      <option value="center top">Tengah atas</option>
+      <option value="right top">Kanan atas</option>
+      <option value="left center">Kiri tengah</option>
+      <option value="center center">Tengah (default)</option>
+      <option value="right center">Kanan tengah</option>
+      <option value="left bottom">Kiri bawah</option>
+      <option value="center bottom">Tengah bawah</option>
+      <option value="right bottom">Kanan bawah</option>
+    </select>
+    <label style="margin-top:14px;">Pratinjau</label>
+    <div id="pfnHeroBgPreviewBox" style="width:100%; height:110px; border:1px solid var(--line-strong); border-radius:6px; background-repeat:no-repeat; background-size:cover;"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="pfnHeroBgCancelBtn">Batal</button>
+      <button class="btn-primary" id="pfnHeroBgSaveBtn">Simpan</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL KERANJANG BELANJA & CHECKOUT -->
 <div class="modal-overlay" id="cartOverlay">
   <div class="modal" style="width:420px;">
@@ -5311,6 +5346,10 @@
     const heroEl = document.getElementById('pfnHero');
     if(portfolioPageV2.heroBg){
       heroEl.style.backgroundImage = 'linear-gradient(rgba(20,45,48,0.72), rgba(20,45,48,0.72)), ' + cssUrl(portfolioPageV2.heroBg);
+      heroEl.style.backgroundPosition = portfolioPageV2.heroBgPosition || 'center center';
+    }else{
+      heroEl.style.backgroundImage = '';
+      heroEl.style.backgroundPosition = '';
     }
     document.getElementById('pfnHeroTitle').textContent = portfolioPageV2.heroTitle;
     document.getElementById('pfnHeroSubtitle').textContent = portfolioPageV2.heroSubtitle;
@@ -5430,12 +5469,41 @@
       fileInput.value = '';
     });
   }
-  wirePfnDirectImageUpload('pfnHeroBgEditBtn','pfnHeroBgFileInput', (dataUrl) => {
-    portfolioPageV2.heroBg = dataUrl;
+  function updatePfnHeroBgPreview(){
+    const box = document.getElementById('pfnHeroBgPreviewBox');
+    const url = document.getElementById('pfnHeroBgUrlInput').value.trim();
+    const pos = document.getElementById('pfnHeroBgPositionInput').value || 'center center';
+    if(url){ box.style.backgroundImage = cssUrl(url); box.style.backgroundPosition = pos; }
+    else{ box.style.backgroundImage = 'none'; }
+  }
+  document.getElementById('pfnHeroBgEditBtn').addEventListener('click', () => {
+    document.getElementById('pfnHeroBgUrlInput').value = portfolioPageV2.heroBg || '';
+    document.getElementById('pfnHeroBgPositionInput').value = portfolioPageV2.heroBgPosition || 'center center';
+    const prev = document.getElementById('pfnHeroBgModalPreview');
+    if(portfolioPageV2.heroBg){ prev.src = portfolioPageV2.heroBg; prev.style.display = 'block'; } else { prev.style.display = 'none'; }
+    document.getElementById('pfnHeroBgModalFileInput').value = '';
+    updatePfnHeroBgPreview();
+    document.getElementById('pfnHeroBgOverlay').classList.add('open');
+  });
+  document.getElementById('pfnHeroBgCancelBtn').addEventListener('click', () => document.getElementById('pfnHeroBgOverlay').classList.remove('open'));
+  document.getElementById('pfnHeroBgOverlay').addEventListener('click', (e) => { if(e.target.id === 'pfnHeroBgOverlay') e.target.classList.remove('open'); });
+  wireImageUpload('pfnHeroBgModalUploadBtn','pfnHeroBgModalFileInput','pfnHeroBgUrlInput','pfnHeroBgModalPreview', 1600, 0.8);
+  ['pfnHeroBgUrlInput','pfnHeroBgPositionInput'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updatePfnHeroBgPreview);
+    document.getElementById(id).addEventListener('change', updatePfnHeroBgPreview);
+  });
+  document.getElementById('pfnHeroBgSaveBtn').addEventListener('click', () => {
+    const url = document.getElementById('pfnHeroBgUrlInput').value.trim();
+    const pos = document.getElementById('pfnHeroBgPositionInput').value || 'center center';
+    portfolioPageV2.heroBg = url;
+    portfolioPageV2.heroBgPosition = pos;
     renderPortfolioPageV2();
-    persistSetting('pfImg_heroBg', dataUrl);
+    // Simpan ke key foto terpisah HANYA kalau hasil upload (data:...) — foto dari URL luar
+    // tetap full kualitas dan tidak perlu disalin/dibatasi ukurannya di database.
+    persistSetting('pfImg_heroBg', url.startsWith('data:') ? url : '');
     savePortfolioPageV2();
-  }, 1400, 0.75);
+    document.getElementById('pfnHeroBgOverlay').classList.remove('open');
+  });
   wirePfnDirectImageUpload('pfnKiosImgEditBtn','pfnKiosImgFileInput', (dataUrl) => {
     portfolioPageV2.kiosImage = dataUrl;
     renderPortfolioPageV2();
