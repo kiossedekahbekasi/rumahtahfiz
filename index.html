@@ -2646,9 +2646,40 @@
   function persistSetting(key, value){
     try{ localStorage.setItem(key, JSON.stringify(value)); }catch(err){}
     remoteSettings[key] = value;
-    if(currentUser && currentUser.role === 'admin' && scriptUrl){
-      apiPost('upsert_setting', { key, data: value, adminEmail: currentUser.email }).catch(()=>{});
+    if(!(currentUser && currentUser.role === 'admin' && scriptUrl)) return;
+
+    // Cek dulu ukuran totalnya SEBELUM dikirim. Google Sheets membatasi setiap sel
+    // maksimal sekitar 50.000 karakter — kalau data pengaturan ini (misalnya gabungan
+    // banyak foto di satu key seperti "portfolioPageV2") sudah melebihi itu, penyimpanan
+    // ke server PASTI gagal. Sebelumnya kegagalan ini tidak pernah diberitahukan ke admin
+    // (silent fail) — sekarang admin langsung diberi peringatan jelas.
+    let serialized = '';
+    try{ serialized = JSON.stringify(value) || ''; }catch(err){}
+    if(serialized.length > 45000){
+      alert(
+        'Gagal menyinkronkan "' + key + '" ke database.\n\n' +
+        'Data ini berukuran sekitar ' + Math.round(serialized.length/1024) + ' KB, melebihi batas ' +
+        'maksimal Google Sheets (~49 KB per sel). Kemungkinan besar ini karena terlalu banyak foto ' +
+        'digabung dalam satu bagian yang sama.\n\n' +
+        'Perubahan ini HANYA tersimpan di perangkat ini dan TIDAK akan terlihat oleh admin/anggota lain. ' +
+        'Coba gunakan foto yang lebih kecil, atau hapus salah satu foto lain di bagian ini dulu sebelum menambah yang baru.'
+      );
+      return;
     }
+
+    apiPost('upsert_setting', { key, data: value, adminEmail: currentUser.email })
+      .then(result => {
+        if(!result || !result.ok){
+          alert(
+            'Gagal menyimpan "' + key + '" ke database: ' + ((result && result.error) || 'kesalahan tidak diketahui') + '\n\n' +
+            'Perubahan ini HANYA tersimpan di perangkat ini dan TIDAK terlihat oleh admin/anggota lain sampai berhasil disinkronkan ulang.'
+          );
+        }
+      })
+      .catch(err => {
+        console.error('Gagal menghubungi database untuk pengaturan "' + key + '":', err);
+        alert('Tidak bisa menghubungi database untuk menyimpan "' + key + '". Periksa koneksi internet, lalu coba lagi.');
+      });
   }
   // Ambil pengaturan: utamakan data server (kalau sudah dimuat), lalu localStorage, lalu default.
   function loadSyncedSetting(key, isValid){
@@ -4881,7 +4912,30 @@
     copyright: "© Kios Sedekah dan Rumah Tahfiz Al-Quran Nurul A'laa. All rights reserved."
   };
 
-  const savePortfolioPageV2Debounced = debounce(() => persistSetting('portfolioPageV2', portfolioPageV2), 500);
+  const savePortfolioPageV2Debounced = debounce(() => savePortfolioPageV2(), 500);
+
+  // ---------- Simpan portofolio v2 TANPA foto besar ikut dalam satu blok JSON ----------
+  // PENTING: sebelumnya SEMUA foto (hero, kios, banner, tiap layanan, tiap program) ikut
+  // digabung ke satu key 'portfolioPageV2' yang tersimpan di SATU sel Google Sheets. Sel
+  // itu punya batas maksimal ~50.000 karakter — begitu ada lebih dari 1-2 foto, totalnya
+  // gampang melebihi batas itu dan penyimpanan ke database GAGAL (foto kelihatan tersimpan
+  // di perangkat sendiri lewat localStorage, tapi tidak pernah sampai ke admin/anggota lain).
+  // Sekarang tiap foto disimpan sebagai key 'pfImg_<id>' TERSENDIRI (masing-masing sudah
+  // dikompres di bawah batas itu oleh readFileAsOptimizedDataUrl), dan blok 'portfolioPageV2'
+  // hanya berisi teks + referensi ringan — jadi selalu aman ukurannya.
+  function buildPortfolioPageV2ForSync(){
+    const clone = JSON.parse(JSON.stringify(portfolioPageV2));
+    const stripIfUploaded = (val) => (val && val.indexOf('data:') === 0) ? '' : val;
+    clone.heroBg = stripIfUploaded(clone.heroBg);
+    clone.kiosImage = stripIfUploaded(clone.kiosImage);
+    clone.bannerImage = stripIfUploaded(clone.bannerImage);
+    (clone.services || []).forEach(item => { item.image = stripIfUploaded(item.image); });
+    (clone.programs || []).forEach(item => { item.image = stripIfUploaded(item.image); });
+    return clone;
+  }
+  function savePortfolioPageV2(){
+    persistSetting('portfolioPageV2', buildPortfolioPageV2ForSync());
+  }
 
   // ---------- Layanan Kami (hover slider) ----------
   let pfnServicesHoverIndex = 0;
@@ -4921,7 +4975,7 @@
       portfolioPageV2.services = portfolioPageV2.services.filter(x => x.id !== item.id);
       if(pfnServicesHoverIndex >= portfolioPageV2.services.length) pfnServicesHoverIndex = 0;
       renderPfnServices();
-      persistSetting('portfolioPageV2', portfolioPageV2);
+      savePortfolioPageV2();
     });
     return row;
   }
@@ -4952,7 +5006,7 @@
     portfolioPageV2.services.push({ id:'sv-' + crypto.randomUUID().slice(0,8), title:'Layanan Baru', image:'https://placehold.co/500x650?text=Layanan+Baru' });
     pfnServicesHoverIndex = portfolioPageV2.services.length - 1;
     renderPfnServices();
-    persistSetting('portfolioPageV2', portfolioPageV2);
+    savePortfolioPageV2();
   });
 
   document.getElementById('pfnServiceImgEditBtn').addEventListener('click', () => {
@@ -4971,7 +5025,8 @@
       const dataUrl = await readFileAsOptimizedDataUrl(file, 900, 0.8);
       item.image = dataUrl;
       renderPfnServicesImages();
-      persistSetting('portfolioPageV2', portfolioPageV2);
+      persistSetting('pfImg_' + item.id, dataUrl);
+      savePortfolioPageV2();
     }catch(err){ alert('Gagal membaca gambar dari perangkat.'); }
     btn.textContent = original;
     fileInput.value = '';
@@ -4995,7 +5050,7 @@
       if(!confirm('Hapus nilai "' + v.title + '"?')) return;
       portfolioPageV2.values = portfolioPageV2.values.filter(x => x.id !== v.id);
       renderPortfolioPageV2();
-      persistSetting('portfolioPageV2', portfolioPageV2);
+      savePortfolioPageV2();
     });
     return el;
   }
@@ -5041,7 +5096,7 @@
       portfolioPageV2.programs = portfolioPageV2.programs.filter(x => x.id !== p.id);
       if(pfnProgramHoverIndex >= portfolioPageV2.programs.length) pfnProgramHoverIndex = 0;
       renderPfnPrograms();
-      persistSetting('portfolioPageV2', portfolioPageV2);
+      savePortfolioPageV2();
     });
     return row;
   }
@@ -5098,7 +5153,8 @@
       const dataUrl = await readFileAsOptimizedDataUrl(file, 700, 0.8);
       p.image = dataUrl;
       renderPfnProgramSlides();
-      persistSetting('portfolioPageV2', portfolioPageV2);
+      persistSetting('pfImg_' + p.id, dataUrl);
+      savePortfolioPageV2();
     }catch(err){ alert('Gagal membaca gambar dari perangkat.'); }
     btn.textContent = original;
     fileInput.value = '';
@@ -5120,7 +5176,7 @@
     row.querySelector('.pfn-hour-del').addEventListener('click', () => {
       portfolioPageV2.hours = portfolioPageV2.hours.filter(x => x.id !== h.id);
       renderPortfolioPageV2();
-      persistSetting('portfolioPageV2', portfolioPageV2);
+      savePortfolioPageV2();
     });
     return row;
   }
@@ -5150,7 +5206,7 @@
       delBtn.addEventListener('click', () => {
         portfolioPageV2.socials = portfolioPageV2.socials.filter(x => x.id !== s.id);
         renderPortfolioPageV2();
-        persistSetting('portfolioPageV2', portfolioPageV2);
+        savePortfolioPageV2();
       });
       row.appendChild(delBtn);
     }
@@ -5205,6 +5261,25 @@
   function loadPortfolioPageV2(){
     const saved = loadSyncedSetting('portfolioPageV2', x => x && typeof x === 'object');
     if(saved){ portfolioPageV2 = Object.assign({}, portfolioPageV2, saved); }
+
+    // Timpa dengan foto terbaru dari key tersendiri masing-masing (lihat savePortfolioPageV2) —
+    // supaya foto yang diupload admin di perangkat lain juga muncul di sini.
+    const isValidImg = x => typeof x === 'string' && x;
+    const heroImg = loadSyncedSetting('pfImg_heroBg', isValidImg);
+    if(heroImg) portfolioPageV2.heroBg = heroImg;
+    const kiosImg = loadSyncedSetting('pfImg_kiosImage', isValidImg);
+    if(kiosImg) portfolioPageV2.kiosImage = kiosImg;
+    const bannerImg = loadSyncedSetting('pfImg_bannerImage', isValidImg);
+    if(bannerImg) portfolioPageV2.bannerImage = bannerImg;
+    (portfolioPageV2.services || []).forEach(item => {
+      const img = loadSyncedSetting('pfImg_' + item.id, isValidImg);
+      if(img) item.image = img;
+    });
+    (portfolioPageV2.programs || []).forEach(item => {
+      const img = loadSyncedSetting('pfImg_' + item.id, isValidImg);
+      if(img) item.image = img;
+    });
+
     renderPortfolioPageV2();
   }
 
@@ -5226,22 +5301,22 @@
   document.getElementById('pfnValueAddBtn').addEventListener('click', () => {
     portfolioPageV2.values.push({ id:'v-' + crypto.randomUUID().slice(0,8), icon:'⭐', title:'Nilai Baru', desc:'Deskripsi singkat tentang nilai ini.' });
     renderPortfolioPageV2();
-    persistSetting('portfolioPageV2', portfolioPageV2);
+    savePortfolioPageV2();
   });
   document.getElementById('pfnProgramAddBtn').addEventListener('click', () => {
     portfolioPageV2.programs.push({ id:'p-' + crypto.randomUUID().slice(0,8), image:'https://placehold.co/400x300?text=Program', title:'Program Baru', desc:'Deskripsi singkat tentang program ini.' });
     renderPortfolioPageV2();
-    persistSetting('portfolioPageV2', portfolioPageV2);
+    savePortfolioPageV2();
   });
   document.getElementById('pfnHoursAddBtn').addEventListener('click', () => {
     portfolioPageV2.hours.push({ id:'h-' + crypto.randomUUID().slice(0,8), day:'Hari', time:'Tutup' });
     renderPortfolioPageV2();
-    persistSetting('portfolioPageV2', portfolioPageV2);
+    savePortfolioPageV2();
   });
   document.getElementById('pfnSocialAddBtn').addEventListener('click', () => {
     portfolioPageV2.socials.push({ id:'s-' + crypto.randomUUID().slice(0,8), icon:'🔗', url:'' });
     renderPortfolioPageV2();
-    persistSetting('portfolioPageV2', portfolioPageV2);
+    savePortfolioPageV2();
   });
 
   function wirePfnDirectImageUpload(btnId, fileInputId, onLoaded, maxDim, quality){
@@ -5264,17 +5339,20 @@
   wirePfnDirectImageUpload('pfnHeroBgEditBtn','pfnHeroBgFileInput', (dataUrl) => {
     portfolioPageV2.heroBg = dataUrl;
     renderPortfolioPageV2();
-    persistSetting('portfolioPageV2', portfolioPageV2);
+    persistSetting('pfImg_heroBg', dataUrl);
+    savePortfolioPageV2();
   }, 1400, 0.75);
   wirePfnDirectImageUpload('pfnKiosImgEditBtn','pfnKiosImgFileInput', (dataUrl) => {
     portfolioPageV2.kiosImage = dataUrl;
     renderPortfolioPageV2();
-    persistSetting('portfolioPageV2', portfolioPageV2);
+    persistSetting('pfImg_kiosImage', dataUrl);
+    savePortfolioPageV2();
   }, 900, 0.8);
   wirePfnDirectImageUpload('pfnBannerEditBtn','pfnBannerFileInput', (dataUrl) => {
     portfolioPageV2.bannerImage = dataUrl;
     renderPortfolioPageV2();
-    persistSetting('portfolioPageV2', portfolioPageV2);
+    persistSetting('pfImg_bannerImage', dataUrl);
+    savePortfolioPageV2();
   }, 1400, 0.75);
 
   // ---------- Anggota / Avatar ----------
