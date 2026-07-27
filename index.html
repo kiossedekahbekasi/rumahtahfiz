@@ -1387,6 +1387,245 @@
     .modal{ width:94vw; padding:16px; }
     .settings-title{ font-size:1.25rem; }
   }
+
+  /* ================= PORTOFOLIO BARU — desain kios (tambahan) ================= */
+  .pfn-wrap{ background:var(--paper); }
+  .pfn-hero{
+    position:relative; min-height:520px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(rgba(20,45,48,0.72), rgba(20,45,48,0.72)), var(--ink-dark-2) center/cover no-repeat;
+    padding:80px 30px; text-align:center; overflow:hidden;
+  }
+  .pfn-hero-inner{ max-width:900px; position:relative; z-index:2; }
+  .pfn-hero-title{
+    font-family:'Fraunces', serif; font-weight:600; font-size:2.6rem; line-height:1.25;
+    color:var(--paper-card); margin:0 0 26px; text-shadow:0 2px 10px rgba(0,0,0,0.25);
+  }
+  .pfn-hero-divider{ width:120px; height:1px; background:rgba(249,245,234,0.5); margin:0 auto 26px; }
+  .pfn-hero-subtitle{
+    font-family:'IBM Plex Mono', monospace; font-size:0.92rem; line-height:1.8;
+    color:#d9d2c2; max-width:640px; margin:0 auto;
+  }
+  .pfn-hero-editbtn{
+    position:absolute; top:16px; right:16px; z-index:3; display:none;
+    font-family:'IBM Plex Mono', monospace; font-size:0.7rem; padding:8px 12px; border-radius:6px;
+    border:1px solid rgba(249,245,234,0.5); background:rgba(32,31,29,0.55); color:var(--white); cursor:pointer;
+    align-items:center; gap:6px;
+  }
+  body.edit-mode .pfn-hero-editbtn{ display:inline-flex; }
+  .pfn-hero-editbtn:hover{ background:rgba(32,31,29,0.8); }
+
+  /* ---- Layanan Kami (hover slider) ---- */
+  .pfn-services-section{ background:var(--paper); }
+  .pfn-services-title{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.1em;
+    text-transform:none; color:var(--accent-clay); margin:0 0 34px; text-align:center;
+  }
+  .pfn-services-wrap{
+    display:flex; flex-wrap:wrap-reverse; align-items:center; justify-content:center;
+    gap:46px; max-width:1080px; margin:0 auto;
+  }
+  .pfn-services-list{ display:flex; flex-direction:column; gap:10px; min-width:260px; flex:1 1 300px; }
+  .pfn-service-row{
+    display:flex; align-items:baseline; gap:14px; cursor:pointer; position:relative;
+    padding:6px 4px; border-radius:4px;
+  }
+  .pfn-service-num{
+    font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:var(--ink-soft);
+    transition:color 0.3s ease; flex-shrink:0;
+  }
+  .pfn-service-row.active .pfn-service-num{ color:var(--accent-clay); }
+  .pfn-service-title{
+    font-family:'Fraunces', serif; font-size:1.55rem; font-weight:600; text-transform:uppercase;
+    letter-spacing:-0.01em; color:var(--ink-dark);
+    transition:color 0.3s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  }
+  .pfn-service-row.active .pfn-service-title{ color:var(--accent-clay); transform:translateX(8px); }
+  .pfn-service-del{
+    display:none; position:absolute; top:2px; right:-8px; width:20px; height:20px; border-radius:50%;
+    background:var(--accent-clay); color:var(--white); border:none; font-size:0.62rem; cursor:pointer;
+    align-items:center; justify-content:center;
+  }
+  body.edit-mode .pfn-service-del{ display:flex; }
+  .pfn-services-imgwrap{
+    position:relative; width:min(80vw, 340px); aspect-ratio:3/4; overflow:hidden;
+    border-radius:2px; flex-shrink:0; background:var(--line);
+  }
+  .pfn-service-img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0; transform:scale(1.045);
+    transition:opacity 0.7s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  }
+  .pfn-service-img.active{ opacity:1; transform:scale(1); }
+  .pfn-service-img-editbtn{
+    display:none; position:absolute; bottom:10px; right:10px; z-index:2;
+    font-family:'IBM Plex Mono', monospace; font-size:0.68rem; padding:7px 10px; border-radius:6px;
+    border:1px solid var(--line-strong); background:rgba(249,245,234,0.92); color:var(--ink-mid); cursor:pointer;
+    align-items:center; gap:5px;
+  }
+  body.edit-mode .pfn-service-img-editbtn{ display:inline-flex; }
+  .pfn-service-img-editbtn:hover{ color:var(--accent-teal-dark); border-color:var(--accent-teal); }
+
+  .pfn-section{ padding:56px 40px; }
+  .pfn-values-section{ background:var(--paper); padding-bottom:64px; }
+  .pfn-values-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:26px; max-width:1080px; margin:0 auto; }
+  .pfn-value-card{
+    position:relative; background:var(--white); border:1px solid var(--line-strong); border-radius:4px;
+    padding:28px 24px 26px; text-align:center; box-shadow:6px 6px 0 rgba(160,108,40,0.28);
+  }
+  .pfn-value-icon{ font-size:1.8rem; display:block; margin-bottom:14px; }
+  .pfn-value-title{ font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem; color:var(--ink-dark); margin-bottom:10px; }
+  .pfn-value-desc{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; line-height:1.7; color:var(--ink-mid); }
+  .pfn-card-delete{
+    display:none; position:absolute; top:-10px; right:-10px; width:22px; height:22px; border-radius:50%;
+    background:var(--accent-clay); color:var(--white); border:none; font-size:0.68rem; cursor:pointer;
+    align-items:center; justify-content:center;
+  }
+  body.edit-mode .pfn-card-delete{ display:flex; }
+
+  .pfn-kios-section{ display:flex; gap:44px; align-items:center; flex-wrap:wrap; background:var(--paper); }
+  .pfn-kios-imgwrap{ position:relative; flex:1 1 380px; max-width:460px; border-left:5px solid var(--accent-moss); border-bottom:5px solid var(--accent-moss); }
+  .pfn-kios-img{ width:100%; display:block; aspect-ratio:4/3; object-fit:cover; }
+  .pfn-kios-text{ flex:1 1 380px; }
+  .pfn-kios-title{ font-family:'Fraunces', serif; font-weight:600; font-size:1.7rem; color:var(--accent-teal-dark); margin:0 0 16px; }
+  .pfn-kios-para{ font-family:'IBM Plex Mono', monospace; font-size:0.82rem; line-height:1.85; color:var(--ink-mid); margin:0 0 16px; }
+
+  .pfn-banner-wrap{ position:relative; width:100%; height:280px; overflow:hidden; }
+  .pfn-banner-img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .pfn-program-section{ background:var(--ink-dark); text-align:center; }
+  .pfn-program-title{ font-family:'Fraunces', serif; font-weight:600; font-size:1.9rem; color:var(--accent-amber); margin:0 0 36px; }
+  .pfn-program-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:26px; max-width:1080px; margin:0 auto; text-align:left; }
+  .pfn-program-card{ position:relative; background:var(--paper-card); border:1px solid var(--line-strong); border-radius:4px; overflow:hidden; }
+  .pfn-program-imgwrap{ position:relative; width:100%; aspect-ratio:4/3; background:var(--line); }
+  .pfn-program-img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .pfn-program-body{ padding:18px 20px 22px; }
+  .pfn-program-card-title{ font-family:'Fraunces', serif; font-weight:600; font-size:1.05rem; color:var(--accent-teal-dark); margin-bottom:10px; }
+  .pfn-program-card-desc{ font-family:'IBM Plex Mono', monospace; font-size:0.76rem; line-height:1.7; color:var(--ink-mid); }
+
+  /* ---- Program Kami (hover slider, dark) ---- */
+  .pfn-program-section{ text-align:center; }
+  .pfn-program-wrap{
+    display:flex; flex-wrap:wrap-reverse; align-items:center; justify-content:center;
+    gap:46px; max-width:1080px; margin:0 auto; text-align:left;
+  }
+  .pfn-program-list{ display:flex; flex-direction:column; gap:10px; min-width:260px; flex:1 1 300px; }
+  .pfn-program-row{
+    display:flex; align-items:baseline; gap:14px; cursor:pointer; position:relative;
+    padding:6px 4px; border-radius:4px;
+  }
+  .pfn-program-num{
+    font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:#8a8375;
+    transition:color 0.3s ease; flex-shrink:0;
+  }
+  .pfn-program-row.active .pfn-program-num{ color:var(--accent-amber); }
+  .pfn-program-row-title{
+    font-family:'Fraunces', serif; font-size:1.45rem; font-weight:600; text-transform:uppercase;
+    letter-spacing:-0.01em; color:var(--paper-card);
+    transition:color 0.3s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  }
+  .pfn-program-row.active .pfn-program-row-title{ color:var(--accent-amber); transform:translateX(8px); }
+  .pfn-program-row-del{
+    display:none; position:absolute; top:2px; right:-8px; width:20px; height:20px; border-radius:50%;
+    background:var(--accent-clay); color:var(--white); border:none; font-size:0.62rem; cursor:pointer;
+    align-items:center; justify-content:center;
+  }
+  body.edit-mode .pfn-program-row-del{ display:flex; }
+  .pfn-program-slider-wrap{
+    position:relative; width:min(80vw, 340px); aspect-ratio:3/4; overflow:hidden;
+    border-radius:4px; flex-shrink:0; background:#2b2925;
+  }
+  .pfn-program-slide-img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0; transform:scale(1.045);
+    transition:opacity 0.7s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  }
+  .pfn-program-slide-img.active{ opacity:1; transform:scale(1); }
+  .pfn-program-caption-wrap{
+    position:absolute; left:0; right:0; bottom:0; z-index:2; padding:18px 18px 16px;
+    background:linear-gradient(0deg, rgba(20,19,17,0.88), rgba(20,19,17,0));
+  }
+  .pfn-program-caption{
+    display:none; font-family:'IBM Plex Mono', monospace; font-size:0.76rem; line-height:1.65;
+    color:var(--paper-card);
+  }
+  .pfn-program-caption.active{ display:block; }
+  .pfn-program-slide-editbtn{
+    display:none; position:absolute; top:10px; right:10px; z-index:3;
+    font-family:'IBM Plex Mono', monospace; font-size:0.68rem; padding:7px 10px; border-radius:6px;
+    border:1px solid rgba(249,245,234,0.4); background:rgba(32,31,29,0.6); color:var(--paper-card); cursor:pointer;
+    align-items:center; gap:5px;
+  }
+  body.edit-mode .pfn-program-slide-editbtn{ display:inline-flex; }
+  .pfn-program-slide-editbtn:hover{ border-color:var(--accent-amber); color:var(--accent-amber); }
+
+  .pfn-img-editbtn{
+    display:none; position:absolute; bottom:10px; right:10px; z-index:2;
+    font-family:'IBM Plex Mono', monospace; font-size:0.68rem; padding:7px 10px; border-radius:6px;
+    border:1px solid var(--line-strong); background:rgba(249,245,234,0.92); color:var(--ink-mid); cursor:pointer;
+    align-items:center; gap:5px;
+  }
+  body.edit-mode .pfn-img-editbtn{ display:inline-flex; }
+  .pfn-img-editbtn:hover{ color:var(--accent-teal-dark); border-color:var(--accent-teal); }
+
+  .pfn-add-btn{
+    display:none; margin:30px auto 0; font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    padding:10px 18px; border-radius:6px; border:1px dashed var(--line-strong); background:var(--paper-card);
+    color:var(--ink-mid); cursor:pointer;
+  }
+  .pfn-add-btn-dark{ background:var(--ink-dark-2); color:var(--paper); border-color:#4a453d; }
+  body.edit-mode .pfn-add-btn{ display:block; }
+  .pfn-add-btn-small{
+    display:none; margin-top:10px; font-family:'IBM Plex Mono', monospace; font-size:0.7rem;
+    padding:7px 12px; border-radius:6px; border:1px dashed rgba(249,245,234,0.4); background:none;
+    color:var(--paper-card); cursor:pointer;
+  }
+  body.edit-mode .pfn-add-btn-small{ display:inline-block; }
+
+  .pfn-footer{ background:var(--accent-teal-dark); padding:50px 40px 24px; display:flex; gap:50px; flex-wrap:wrap; }
+  .pfn-footer-col{ flex:1 1 220px; min-width:200px; }
+  .pfn-footer-heading{ font-family:'Fraunces', serif; font-weight:600; font-size:1.1rem; color:var(--accent-amber); margin-bottom:14px; }
+  .pfn-footer-text{ font-family:'IBM Plex Mono', monospace; font-size:0.8rem; line-height:1.8; color:var(--paper-card); margin:0 0 6px; white-space:pre-wrap; }
+  .pfn-footer-phone-label{ font-family:'IBM Plex Mono', monospace; font-size:0.8rem; color:var(--paper-card); font-weight:600; margin:10px 0 2px; }
+  .pfn-hours-list{ display:flex; flex-direction:column; gap:4px; }
+  .pfn-hour-row{ display:flex; align-items:center; gap:8px; font-family:'IBM Plex Mono', monospace; font-size:0.8rem; color:var(--paper-card); }
+  .pfn-hour-row .pfn-hour-day{ min-width:64px; font-weight:600; }
+  .pfn-hour-row .pfn-hour-time{ flex:1; }
+  .pfn-hour-del{
+    display:none; width:16px; height:16px; border-radius:50%; border:none; background:var(--accent-clay);
+    color:var(--white); font-size:0.55rem; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  body.edit-mode .pfn-hour-del{ display:flex; }
+  .pfn-social-list{ display:flex; gap:10px; margin-top:6px; flex-wrap:wrap; }
+  .pfn-social-row{ display:flex; align-items:center; gap:6px; }
+  .pfn-social-icon{
+    width:36px; height:36px; border-radius:50%; background:var(--paper-card); color:var(--accent-teal-dark);
+    display:flex; align-items:center; justify-content:center; font-size:1.05rem; text-decoration:none; cursor:pointer;
+  }
+  .pfn-social-url-input{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; padding:6px 8px; border-radius:5px;
+    border:1px solid rgba(249,245,234,0.4); background:rgba(255,255,255,0.08); color:var(--paper-card); width:130px;
+  }
+  .pfn-social-del{
+    display:none; width:18px; height:18px; border-radius:50%; border:none; background:var(--accent-clay);
+    color:var(--white); font-size:0.6rem; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  body.edit-mode .pfn-social-del{ display:flex; }
+  .pfn-footer-bottom{ background:var(--paper); padding:14px 40px; text-align:center; }
+  .pfn-footer-bottom p{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-soft); margin:0; }
+
+  @media (max-width:820px){
+    .pfn-hero{ min-height:420px; padding:56px 22px; }
+    .pfn-hero-title{ font-size:1.9rem; }
+    .pfn-section{ padding:40px 20px; }
+    .pfn-kios-section{ padding:40px 20px; }
+    .pfn-footer{ padding:36px 20px 20px; gap:30px; }
+    .pfn-services-wrap{ gap:28px; }
+    .pfn-service-title{ font-size:1.2rem; }
+    .pfn-services-imgwrap{ width:100%; max-width:320px; }
+    .pfn-program-wrap{ gap:28px; }
+    .pfn-program-row-title{ font-size:1.1rem; }
+    .pfn-program-slider-wrap{ width:100%; max-width:320px; }
+  }
 </style>
 </head>
 <body>
@@ -1602,50 +1841,135 @@
 
     <!-- VIEW: PORTOFOLIO -->
     <section class="view active" id="viewPortfolio">
-      <div class="portfolio-wrap">
-        <div class="portfolio-hero" id="portfolioHero">
-          <div class="pf-hero-drag-overlay" id="pfHeroDragOverlay" title="Geser untuk mengatur posisi foto latar"></div>
-          <div class="portfolio-avatars-row">
-            <div class="portfolio-avatar-wrap" id="pfAvatarWrap">
-              <img class="portfolio-avatar" id="pfAvatar" src="https://placehold.co/240x240/2f6e73/ffffff?text=Foto" alt="Foto profil">
-              <button type="button" class="pf-avatar-addbtn" id="pfAvatarQuickBtn" title="Tambah/ganti foto profil">📷</button>
-            </div>
-            <div class="portfolio-avatar-wrap" id="pfAvatarWrap2">
-              <img class="portfolio-avatar" id="pfAvatar2" src="https://placehold.co/240x240/6b7d4f/ffffff?text=Foto" alt="Foto kedua">
-              <button type="button" class="pf-avatar-addbtn" id="pfAvatarQuickBtn2" title="Tambah/ganti foto kedua">📷</button>
-              <input type="file" id="pfAvatar2FileInput" accept="image/*" style="display:none;">
-            </div>
-          </div>
-          <div class="portfolio-hero-text">
-            <span class="portfolio-role editable-field" id="pfRole">Desainer Produk & Pengembang</span>
-            <h1 class="portfolio-name editable-field" id="pfName">Nama Kamu</h1>
-            <p class="portfolio-tagline editable-field" id="pfTagline">Tuliskan satu kalimat yang menggambarkan gaya kerja dan keahlianmu di sini.</p>
-            <div class="portfolio-meta-row">
-              <span class="portfolio-email editable-field" id="pfEmail">nama@email.com</span>
-              <button class="invite-btn on-dark pf-hero-admin-btn" id="pfChangeAvatarBtn">✎ Ganti foto</button>
-              <button type="button" class="invite-btn on-dark pf-hero-admin-btn" id="pfHeroPosDragBtn">✥ Geser posisi latar</button>
-            </div>
-            <div class="portfolio-skills" id="pfSkills"></div>
+      <div class="portfolio-wrap pfn-wrap" style="padding:0;">
+
+        <div class="pfn-hero" id="pfnHero">
+          <button type="button" class="pfn-hero-editbtn" id="pfnHeroBgEditBtn">📁 Ganti Foto Latar</button>
+          <input type="file" id="pfnHeroBgFileInput" accept="image/*" style="display:none;">
+          <div class="pfn-hero-inner">
+            <h1 class="pfn-hero-title editable-field" id="pfnHeroTitle">Dengan Belanja di KIOS SEDEKAH semuanya menjadi berkah.</h1>
+            <div class="pfn-hero-divider"></div>
+            <p class="pfn-hero-subtitle editable-field" id="pfnHeroSubtitle">Sebuah pusat komunitas berbasis misi yang mengintegrasikan perdagangan harian dengan pendidikan agama dan tujuan amal, sesuai dengan nilai-nilai spiritual komunitas kami.</p>
           </div>
         </div>
 
-        <div class="portfolio-bio-section">
-          <span class="portfolio-bio-label">Tentang</span>
-          <p class="portfolio-bio editable-field" id="pfBio">Ceritakan sedikit tentang perjalanan, pendekatan kerja, dan apa yang membuatmu unik. Bagian ini bisa diedit langsung oleh admin lewat Mode Edit.</p>
-        </div>
-
-        <div class="portfolio-bio-section" style="max-width:none; padding-top:6px;">
-          <div class="pf-canvas-toolbar">
-            <button type="button" class="pf-textbox-addbtn" id="pfTextboxAddBtn">+ Tambah Text Box</button>
-            <button type="button" class="pf-textbox-addbtn" id="pfImageboxAddBtn">+ Tambah Foto</button>
-            <input type="file" id="pfImageboxFileInput" accept="image/*" style="display:none;">
+        <div class="pfn-section pfn-services-section">
+          <h2 class="pfn-services-title editable-field" id="pfnServicesTitle">/ Layanan Kami</h2>
+          <div class="pfn-services-wrap">
+            <div class="pfn-services-list" id="pfnServicesList"></div>
+            <div class="pfn-services-imgwrap">
+              <div class="pfn-services-images" id="pfnServicesImages"></div>
+              <button type="button" class="pfn-service-img-editbtn" id="pfnServiceImgEditBtn">📁 Ganti Foto</button>
+              <input type="file" id="pfnServiceImgFileInput" accept="image/*" style="display:none;">
+            </div>
           </div>
-          <div class="portfolio-canvas" id="portfolioCanvas"></div>
+          <button type="button" class="pfn-add-btn" id="pfnServiceAddBtn">+ Tambah Layanan</button>
         </div>
 
-        <div class="portfolio-projects-section">
-          <h2 class="portfolio-section-title">Karya & Proyek</h2>
-          <div class="portfolio-grid" id="portfolioGrid"></div>
+        <div class="pfn-section pfn-values-section">
+          <div class="pfn-values-grid" id="pfnValuesGrid"></div>
+          <button type="button" class="pfn-add-btn" id="pfnValueAddBtn">+ Tambah Nilai</button>
+        </div>
+
+        <div class="pfn-section pfn-kios-section">
+          <div class="pfn-kios-imgwrap">
+            <img class="pfn-kios-img" id="pfnKiosImg" src="" alt="Kios Sedekah">
+            <button type="button" class="pfn-img-editbtn" id="pfnKiosImgEditBtn">📁 Ganti Foto</button>
+            <input type="file" id="pfnKiosImgFileInput" accept="image/*" style="display:none;">
+          </div>
+          <div class="pfn-kios-text">
+            <h2 class="pfn-kios-title editable-field" id="pfnKiosTitle">Kios Sedekah</h2>
+            <p class="pfn-kios-para editable-field" id="pfnKiosPara1"></p>
+            <p class="pfn-kios-para editable-field" id="pfnKiosPara2"></p>
+          </div>
+        </div>
+
+        <div class="pfn-banner-wrap">
+          <img class="pfn-banner-img" id="pfnBannerImg" src="" alt="Banner">
+          <button type="button" class="pfn-img-editbtn" id="pfnBannerEditBtn">📁 Ganti Foto Banner</button>
+          <input type="file" id="pfnBannerFileInput" accept="image/*" style="display:none;">
+        </div>
+
+        <div class="pfn-section pfn-program-section">
+          <h2 class="pfn-program-title editable-field" id="pfnProgramTitle">Program Kami</h2>
+          <div class="pfn-program-wrap">
+            <div class="pfn-program-list" id="pfnProgramList"></div>
+            <div class="pfn-program-slider-wrap">
+              <div class="pfn-program-slides" id="pfnProgramSlides"></div>
+              <div class="pfn-program-caption-wrap" id="pfnProgramCaptions"></div>
+              <button type="button" class="pfn-program-slide-editbtn" id="pfnProgramImgEditBtn">📁 Ganti Foto</button>
+              <input type="file" id="pfnProgramImgFileInput" accept="image/*" style="display:none;">
+            </div>
+          </div>
+          <button type="button" class="pfn-add-btn pfn-add-btn-dark" id="pfnProgramAddBtn">+ Tambah Program</button>
+        </div>
+
+        <div class="pfn-footer">
+          <div class="pfn-footer-col">
+            <h3 class="pfn-footer-heading editable-field" id="pfnFooterVisitTitle">Kunjungi Kami</h3>
+            <p class="pfn-footer-text editable-field" id="pfnFooterAddress"></p>
+            <p class="pfn-footer-phone-label">Telepon:</p>
+            <p class="pfn-footer-text editable-field" id="pfnFooterPhone"></p>
+          </div>
+          <div class="pfn-footer-col">
+            <h3 class="pfn-footer-heading editable-field" id="pfnFooterHoursTitle">Jam Operasional</h3>
+            <div class="pfn-hours-list" id="pfnHoursList"></div>
+            <button type="button" class="pfn-add-btn-small" id="pfnHoursAddBtn">+ Tambah Hari</button>
+          </div>
+          <div class="pfn-footer-col">
+            <h3 class="pfn-footer-heading editable-field" id="pfnFooterSocialTitle">Media Sosial</h3>
+            <p class="pfn-footer-text editable-field" id="pfnFooterSocialDesc"></p>
+            <div class="pfn-social-list" id="pfnSocialList"></div>
+            <button type="button" class="pfn-add-btn-small" id="pfnSocialAddBtn">+ Tambah Sosial Media</button>
+          </div>
+        </div>
+        <div class="pfn-footer-bottom">
+          <p class="editable-field" id="pfnCopyright"></p>
+        </div>
+
+        <!-- Konten Portofolio versi lama — disembunyikan, dibiarkan supaya kode lama tidak error -->
+        <div style="display:none">
+          <div class="portfolio-hero" id="portfolioHero">
+            <div class="pf-hero-drag-overlay" id="pfHeroDragOverlay" title="Geser untuk mengatur posisi foto latar"></div>
+            <div class="portfolio-avatars-row">
+              <div class="portfolio-avatar-wrap" id="pfAvatarWrap">
+                <img class="portfolio-avatar" id="pfAvatar" src="https://placehold.co/240x240/2f6e73/ffffff?text=Foto" alt="Foto profil">
+                <button type="button" class="pf-avatar-addbtn" id="pfAvatarQuickBtn" title="Tambah/ganti foto profil">📷</button>
+              </div>
+              <div class="portfolio-avatar-wrap" id="pfAvatarWrap2">
+                <img class="portfolio-avatar" id="pfAvatar2" src="https://placehold.co/240x240/6b7d4f/ffffff?text=Foto" alt="Foto kedua">
+                <button type="button" class="pf-avatar-addbtn" id="pfAvatarQuickBtn2" title="Tambah/ganti foto kedua">📷</button>
+                <input type="file" id="pfAvatar2FileInput" accept="image/*" style="display:none;">
+              </div>
+            </div>
+            <div class="portfolio-hero-text">
+              <span class="portfolio-role editable-field" id="pfRole">Desainer Produk & Pengembang</span>
+              <h1 class="portfolio-name editable-field" id="pfName">Nama Kamu</h1>
+              <p class="portfolio-tagline editable-field" id="pfTagline">Tuliskan satu kalimat yang menggambarkan gaya kerja dan keahlianmu di sini.</p>
+              <div class="portfolio-meta-row">
+                <span class="portfolio-email editable-field" id="pfEmail">nama@email.com</span>
+                <button class="invite-btn on-dark pf-hero-admin-btn" id="pfChangeAvatarBtn">✎ Ganti foto</button>
+                <button type="button" class="invite-btn on-dark pf-hero-admin-btn" id="pfHeroPosDragBtn">✥ Geser posisi latar</button>
+              </div>
+              <div class="portfolio-skills" id="pfSkills"></div>
+            </div>
+          </div>
+          <div class="portfolio-bio-section">
+            <span class="portfolio-bio-label">Tentang</span>
+            <p class="portfolio-bio editable-field" id="pfBio">Ceritakan sedikit tentang perjalanan, pendekatan kerja, dan apa yang membuatmu unik. Bagian ini bisa diedit langsung oleh admin lewat Mode Edit.</p>
+          </div>
+          <div class="portfolio-bio-section" style="max-width:none; padding-top:6px;">
+            <div class="pf-canvas-toolbar">
+              <button type="button" class="pf-textbox-addbtn" id="pfTextboxAddBtn">+ Tambah Text Box</button>
+              <button type="button" class="pf-textbox-addbtn" id="pfImageboxAddBtn">+ Tambah Foto</button>
+              <input type="file" id="pfImageboxFileInput" accept="image/*" style="display:none;">
+            </div>
+            <div class="portfolio-canvas" id="portfolioCanvas"></div>
+          </div>
+          <div class="portfolio-projects-section">
+            <h2 class="portfolio-section-title">Karya & Proyek</h2>
+            <div class="portfolio-grid" id="portfolioGrid"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -1707,6 +2031,21 @@
             </div>
           </div>
 
+          <div class="settings-row settings-row-expand" data-row-id="tampilan" data-locked="1">
+            <div class="settings-row-head">
+              <span class="settings-icon editable-field">🎨</span>
+              <span class="settings-label editable-field">Tampilan</span>
+            </div>
+            <div class="settings-row-body" style="margin-left:0; flex-direction:column; align-items:stretch;">
+              <label for="appBgColorInput" style="font-size:0.78rem; color:var(--ink-mid); margin-bottom:6px;">Warna latar aplikasi</label>
+              <div class="modal-color-row">
+                <input type="color" id="appBgColorInput" value="#efe9dc">
+                <span class="color-hint">Berlaku untuk semua akun (tersimpan ke database)</span>
+                <button type="button" class="invite-btn" id="appBgResetBtn" style="margin-left:auto;">↺ Bawaan</button>
+              </div>
+              <p style="font-size:0.7rem; color:var(--ink-soft); margin:8px 0 0; line-height:1.5;">Hanya admin yang bisa mengubah warna latar ini. Perubahan langsung tersinkron ke semua anggota yang login.</p>
+            </div>
+          </div>
           <div class="settings-row settings-row-expand" data-row-id="sinkronisasi" data-locked="1">
             <div class="settings-row-head">
               <span class="settings-icon editable-field">🔄</span>
@@ -3347,6 +3686,34 @@
     const faviconLink = document.getElementById('faviconLink');
     if(faviconLink && logo) faviconLink.href = logo;
   }
+  // ---------- Warna latar aplikasi (menu Pengaturan > Tampilan) — admin only, tersinkron via AppSettings ----------
+  const DEFAULT_APP_BG_COLOR = '#efe9dc';
+  function applyAppBgColor(){
+    const color = loadSyncedSetting('appBgColor', x => typeof x === 'string' && /^#[0-9a-fA-F]{6}$/.test(x)) || DEFAULT_APP_BG_COLOR;
+    document.documentElement.style.setProperty('--paper', color);
+    const input = document.getElementById('appBgColorInput');
+    if(input) input.value = color;
+  }
+  const appBgColorInput = document.getElementById('appBgColorInput');
+  const appBgResetBtn = document.getElementById('appBgResetBtn');
+  if(appBgColorInput){
+    appBgColorInput.addEventListener('input', () => {
+      if(!currentUser || currentUser.role !== 'admin') return;
+      const color = appBgColorInput.value;
+      document.documentElement.style.setProperty('--paper', color);
+      persistSetting('appBgColor', color);
+    });
+  }
+  if(appBgResetBtn){
+    appBgResetBtn.addEventListener('click', () => {
+      if(!currentUser || currentUser.role !== 'admin') return;
+      document.documentElement.style.setProperty('--paper', DEFAULT_APP_BG_COLOR);
+      if(appBgColorInput) appBgColorInput.value = DEFAULT_APP_BG_COLOR;
+      persistSetting('appBgColor', DEFAULT_APP_BG_COLOR);
+    });
+  }
+  applyAppBgColor();
+
   document.getElementById('brandLogoEditBtn').addEventListener('click', () => document.getElementById('brandLogoFileInput').click());
   document.getElementById('brandLogoFileInput').addEventListener('change', async () => {
     const fileInput = document.getElementById('brandLogoFileInput');
@@ -4465,6 +4832,451 @@
     }
   }
 
+  // ---------- Portofolio (desain baru — kios) ----------
+  let portfolioPageV2 = {
+    heroBg: '',
+    heroTitle: "Dengan Belanja di KIOS SEDEKAH semuanya menjadi berkah.",
+    heroSubtitle: "Sebuah pusat komunitas berbasis misi yang mengintegrasikan perdagangan harian dengan pendidikan agama dan tujuan amal, sesuai dengan nilai-nilai spiritual komunitas kami.",
+    values: [
+      { id:'v1', icon:'🤝', title:'Berkah', desc:'Setiap transaksi membawa tujuan yang lebih dalam, bermaksud membawa keberkahan spiritual bagi pelanggan dan komunitas kami.' },
+      { id:'v2', icon:'🌿', title:'Kenyamanan', desc:'Ruang yang tenang dan menenangkan, dirancang untuk memberikan pengalaman belanja yang nyaman dan ramah.' },
+      { id:'v3', icon:'🛡️', title:'Keamanan', desc:'Lingkungan yang tepercaya dan aman, dibangun di atas bukti sosial antar warga dan integrasi komunitas yang tulus.' }
+    ],
+    servicesTitle: '/ Layanan Kami',
+    services: [
+      { id:'sv1', title:'Belanja Harian', image:'https://placehold.co/500x650/2f6e73/ffffff?text=Belanja+Harian' },
+      { id:'sv2', title:'Rumah Tahfiz', image:'https://placehold.co/500x650/6b7d4f/ffffff?text=Rumah+Tahfiz' },
+      { id:'sv3', title:'Bazar Komunitas', image:'https://placehold.co/500x650/c98a3d/ffffff?text=Bazar+Komunitas' }
+    ],
+    kiosImage: 'https://placehold.co/600x450/2f6e73/ffffff?text=Kios+Sedekah',
+    kiosTitle: 'Kios Sedekah',
+    kiosPara1: 'Kios Sedekah lebih dari sekadar kios ritel biasa; ini adalah usaha berbasis komunitas di Bekasi. Kami fokus menyediakan ruang yang fungsional dan bermanfaat, tempat perdagangan harian bertemu dengan niat spiritual.',
+    kiosPara2: 'Dengan mengintegrasikan belanja bersama dukungan amal dan pendidikan, kami memastikan bahwa tindakan sederhana membeli kebutuhan sehari-hari berkontribusi pada tujuan yang lebih besar dan bermisi dalam lingkungan sekitar kami.',
+    bannerImage: 'https://placehold.co/1600x420/204d51/ffffff?text=Foto+Banner',
+    programTitle: 'Program Kami',
+    programs: [
+      { id:'p1', image:'https://placehold.co/400x300/6b7d4f/ffffff?text=Rumah+Tahfiz', title:'Rumah Tahfiz Al-Quran', desc:'Program pendidikan yang berfokus pada hafalan dan pengajaran Al-Quran bagi santri, menumbuhkan perkembangan spiritual seiring perkembangan akademis.' },
+      { id:'p2', image:'https://placehold.co/400x300/8a8375/ffffff?text=Kebersihan', title:'Kebersihan', desc:'Layanan kebersihan dan sanitasi profesional atau proyek pemeliharaan lingkungan berbasis komunitas, mencerminkan komitmen kami pada lingkungan yang bersih.' },
+      { id:'p3', image:'https://placehold.co/400x300/c98a3d/ffffff?text=Bazar', title:'Bazar', desc:'Penyelenggaraan dan fasilitasi acara bazar untuk mendukung kegiatan sosial dan ekonomi lokal, menciptakan pusat interaksi komunitas yang hidup.' }
+    ],
+    footerVisitTitle:'Kunjungi Kami',
+    footerAddress:'QXCR+HQ6, Jl. Kp. Kandang, RT.002/RW.008 Harapan Mulya, Kecamatan Medan Satria Kota Bks, Jawa Barat 17143 Bekasi, Indonesia',
+    footerPhone:'+6289505670423',
+    footerHoursTitle:'Jam Operasional',
+    hours: [
+      { id:'h1', day:'Senin', time:'7:00 AM - 9:00 PM' },
+      { id:'h2', day:'Selasa', time:'7:00 AM - 9:00 PM' },
+      { id:'h3', day:'Rabu', time:'7:00 AM - 9:00 PM' },
+      { id:'h4', day:'Kamis', time:'7:00 AM - 9:00 PM' },
+      { id:'h5', day:'Jumat', time:'7:00 AM - 9:00 PM' },
+      { id:'h6', day:'Sabtu', time:'7:00 AM - 9:00 PM' },
+      { id:'h7', day:'Minggu', time:'7:00 AM - 9:00 PM' }
+    ],
+    footerSocialTitle:'Media Sosial',
+    footerSocialDesc:'Terhubung dengan kami untuk pembaruan dan kegiatan komunitas.',
+    socials: [
+      { id:'s1', icon:'📘', url:'' },
+      { id:'s2', icon:'📷', url:'' }
+    ],
+    copyright: "© Kios Sedekah dan Rumah Tahfiz Al-Quran Nurul A'laa. All rights reserved."
+  };
+
+  const savePortfolioPageV2Debounced = debounce(() => persistSetting('portfolioPageV2', portfolioPageV2), 500);
+
+  // ---------- Layanan Kami (hover slider) ----------
+  let pfnServicesHoverIndex = 0;
+
+  function updatePfnServicesActiveState(){
+    document.querySelectorAll('#pfnServicesList .pfn-service-row').forEach((row, i) => {
+      row.classList.toggle('active', i === pfnServicesHoverIndex);
+    });
+    document.querySelectorAll('#pfnServicesImages .pfn-service-img').forEach((img, i) => {
+      img.classList.toggle('active', i === pfnServicesHoverIndex);
+    });
+  }
+
+  function buildPfnServiceRow(item, index){
+    const row = document.createElement('div');
+    row.className = 'pfn-service-row' + (index === pfnServicesHoverIndex ? ' active' : '');
+    row.innerHTML = `
+      <button type="button" class="pfn-service-del" title="Hapus">✕</button>
+      <span class="pfn-service-num">${String(index + 1).padStart(2, '0')}</span>
+      <span class="pfn-service-title editable-field">${escapeHtml(item.title)}</span>`;
+    row.addEventListener('mouseenter', () => {
+      pfnServicesHoverIndex = index;
+      updatePfnServicesActiveState();
+    });
+    row.addEventListener('click', () => {
+      pfnServicesHoverIndex = index;
+      updatePfnServicesActiveState();
+    });
+    const titleEl = row.querySelector('.pfn-service-title');
+    titleEl.addEventListener('blur', () => {
+      item.title = titleEl.textContent.trim() || item.title;
+      savePortfolioPageV2Debounced();
+    });
+    row.querySelector('.pfn-service-del').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(!confirm('Hapus layanan "' + item.title + '"?')) return;
+      portfolioPageV2.services = portfolioPageV2.services.filter(x => x.id !== item.id);
+      if(pfnServicesHoverIndex >= portfolioPageV2.services.length) pfnServicesHoverIndex = 0;
+      renderPfnServices();
+      persistSetting('portfolioPageV2', portfolioPageV2);
+    });
+    return row;
+  }
+
+  function renderPfnServicesImages(){
+    const wrap = document.getElementById('pfnServicesImages');
+    if(!wrap) return;
+    wrap.innerHTML = '';
+    portfolioPageV2.services.forEach((item, index) => {
+      const img = document.createElement('img');
+      img.className = 'pfn-service-img' + (index === pfnServicesHoverIndex ? ' active' : '');
+      img.src = item.image || 'https://placehold.co/500x650?text=Layanan';
+      img.alt = item.title;
+      wrap.appendChild(img);
+    });
+  }
+
+  function renderPfnServices(){
+    const listEl = document.getElementById('pfnServicesList');
+    if(!listEl) return;
+    listEl.innerHTML = '';
+    portfolioPageV2.services.forEach((item, index) => listEl.appendChild(buildPfnServiceRow(item, index)));
+    renderPfnServicesImages();
+    applyEditableState();
+  }
+
+  document.getElementById('pfnServiceAddBtn').addEventListener('click', () => {
+    portfolioPageV2.services.push({ id:'sv-' + crypto.randomUUID().slice(0,8), title:'Layanan Baru', image:'https://placehold.co/500x650?text=Layanan+Baru' });
+    pfnServicesHoverIndex = portfolioPageV2.services.length - 1;
+    renderPfnServices();
+    persistSetting('portfolioPageV2', portfolioPageV2);
+  });
+
+  document.getElementById('pfnServiceImgEditBtn').addEventListener('click', () => {
+    document.getElementById('pfnServiceImgFileInput').click();
+  });
+  document.getElementById('pfnServiceImgFileInput').addEventListener('change', async () => {
+    const fileInput = document.getElementById('pfnServiceImgFileInput');
+    const file = fileInput.files && fileInput.files[0];
+    if(!file) return;
+    const item = portfolioPageV2.services[pfnServicesHoverIndex];
+    if(!item){ fileInput.value = ''; return; }
+    const btn = document.getElementById('pfnServiceImgEditBtn');
+    const original = btn.textContent;
+    btn.textContent = '⏳ Memproses…';
+    try{
+      const dataUrl = await readFileAsOptimizedDataUrl(file, 900, 0.8);
+      item.image = dataUrl;
+      renderPfnServicesImages();
+      persistSetting('portfolioPageV2', portfolioPageV2);
+    }catch(err){ alert('Gagal membaca gambar dari perangkat.'); }
+    btn.textContent = original;
+    fileInput.value = '';
+  });
+
+  function buildPfnValueCard(v){
+    const el = document.createElement('div');
+    el.className = 'pfn-value-card';
+    el.innerHTML = `
+      <button type="button" class="pfn-card-delete" title="Hapus">✕</button>
+      <span class="pfn-value-icon editable-field">${escapeHtml(v.icon)}</span>
+      <div class="pfn-value-title editable-field">${escapeHtml(v.title)}</div>
+      <div class="pfn-value-desc editable-field">${escapeHtml(v.desc)}</div>`;
+    const iconEl = el.querySelector('.pfn-value-icon');
+    const titleEl = el.querySelector('.pfn-value-title');
+    const descEl = el.querySelector('.pfn-value-desc');
+    iconEl.addEventListener('blur', () => { v.icon = iconEl.textContent.trim() || v.icon; savePortfolioPageV2Debounced(); });
+    titleEl.addEventListener('blur', () => { v.title = titleEl.textContent.trim() || v.title; savePortfolioPageV2Debounced(); });
+    descEl.addEventListener('blur', () => { v.desc = descEl.textContent.trim(); savePortfolioPageV2Debounced(); });
+    el.querySelector('.pfn-card-delete').addEventListener('click', () => {
+      if(!confirm('Hapus nilai "' + v.title + '"?')) return;
+      portfolioPageV2.values = portfolioPageV2.values.filter(x => x.id !== v.id);
+      renderPortfolioPageV2();
+      persistSetting('portfolioPageV2', portfolioPageV2);
+    });
+    return el;
+  }
+
+  // ---------- Program Kami (hover slider, dark theme) ----------
+  let pfnProgramHoverIndex = 0;
+
+  function updatePfnProgramActiveState(){
+    document.querySelectorAll('#pfnProgramList .pfn-program-row').forEach((row, i) => {
+      row.classList.toggle('active', i === pfnProgramHoverIndex);
+    });
+    document.querySelectorAll('#pfnProgramSlides .pfn-program-slide-img').forEach((img, i) => {
+      img.classList.toggle('active', i === pfnProgramHoverIndex);
+    });
+    document.querySelectorAll('#pfnProgramCaptions .pfn-program-caption').forEach((cap, i) => {
+      cap.classList.toggle('active', i === pfnProgramHoverIndex);
+    });
+  }
+
+  function buildPfnProgramRow(p, index){
+    const row = document.createElement('div');
+    row.className = 'pfn-program-row' + (index === pfnProgramHoverIndex ? ' active' : '');
+    row.innerHTML = `
+      <button type="button" class="pfn-program-row-del" title="Hapus">✕</button>
+      <span class="pfn-program-num">${String(index + 1).padStart(2, '0')}</span>
+      <span class="pfn-program-row-title editable-field">${escapeHtml(p.title)}</span>`;
+    row.addEventListener('mouseenter', () => {
+      pfnProgramHoverIndex = index;
+      updatePfnProgramActiveState();
+    });
+    row.addEventListener('click', () => {
+      pfnProgramHoverIndex = index;
+      updatePfnProgramActiveState();
+    });
+    const titleEl = row.querySelector('.pfn-program-row-title');
+    titleEl.addEventListener('blur', () => {
+      p.title = titleEl.textContent.trim() || p.title;
+      savePortfolioPageV2Debounced();
+    });
+    row.querySelector('.pfn-program-row-del').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(!confirm('Hapus program "' + p.title + '"?')) return;
+      portfolioPageV2.programs = portfolioPageV2.programs.filter(x => x.id !== p.id);
+      if(pfnProgramHoverIndex >= portfolioPageV2.programs.length) pfnProgramHoverIndex = 0;
+      renderPfnPrograms();
+      persistSetting('portfolioPageV2', portfolioPageV2);
+    });
+    return row;
+  }
+
+  function buildPfnProgramCaption(p, index){
+    const cap = document.createElement('p');
+    cap.className = 'pfn-program-caption editable-field' + (index === pfnProgramHoverIndex ? ' active' : '');
+    cap.textContent = p.desc || '';
+    cap.addEventListener('blur', () => {
+      p.desc = cap.textContent.trim();
+      savePortfolioPageV2Debounced();
+    });
+    return cap;
+  }
+
+  function renderPfnProgramSlides(){
+    const wrap = document.getElementById('pfnProgramSlides');
+    const capWrap = document.getElementById('pfnProgramCaptions');
+    if(!wrap || !capWrap) return;
+    wrap.innerHTML = '';
+    capWrap.innerHTML = '';
+    portfolioPageV2.programs.forEach((p, index) => {
+      const img = document.createElement('img');
+      img.className = 'pfn-program-slide-img' + (index === pfnProgramHoverIndex ? ' active' : '');
+      img.src = p.image || 'https://placehold.co/500x650?text=Program';
+      img.alt = p.title;
+      wrap.appendChild(img);
+      capWrap.appendChild(buildPfnProgramCaption(p, index));
+    });
+  }
+
+  function renderPfnPrograms(){
+    const listEl = document.getElementById('pfnProgramList');
+    if(!listEl) return;
+    listEl.innerHTML = '';
+    portfolioPageV2.programs.forEach((p, index) => listEl.appendChild(buildPfnProgramRow(p, index)));
+    renderPfnProgramSlides();
+    applyEditableState();
+  }
+
+  document.getElementById('pfnProgramImgEditBtn').addEventListener('click', () => {
+    document.getElementById('pfnProgramImgFileInput').click();
+  });
+  document.getElementById('pfnProgramImgFileInput').addEventListener('change', async () => {
+    const fileInput = document.getElementById('pfnProgramImgFileInput');
+    const file = fileInput.files && fileInput.files[0];
+    if(!file) return;
+    const p = portfolioPageV2.programs[pfnProgramHoverIndex];
+    if(!p){ fileInput.value = ''; return; }
+    const btn = document.getElementById('pfnProgramImgEditBtn');
+    const original = btn.textContent;
+    btn.textContent = '⏳ Memproses…';
+    try{
+      const dataUrl = await readFileAsOptimizedDataUrl(file, 700, 0.8);
+      p.image = dataUrl;
+      renderPfnProgramSlides();
+      persistSetting('portfolioPageV2', portfolioPageV2);
+    }catch(err){ alert('Gagal membaca gambar dari perangkat.'); }
+    btn.textContent = original;
+    fileInput.value = '';
+  });
+
+
+  function buildPfnHourRow(h){
+    const row = document.createElement('div');
+    row.className = 'pfn-hour-row';
+    row.innerHTML = `
+      <span class="pfn-hour-day editable-field">${escapeHtml(h.day)}</span>
+      <span>:</span>
+      <span class="pfn-hour-time editable-field">${escapeHtml(h.time)}</span>
+      <button type="button" class="pfn-hour-del" title="Hapus">✕</button>`;
+    const dayEl = row.querySelector('.pfn-hour-day');
+    const timeEl = row.querySelector('.pfn-hour-time');
+    dayEl.addEventListener('blur', () => { h.day = dayEl.textContent.trim() || h.day; savePortfolioPageV2Debounced(); });
+    timeEl.addEventListener('blur', () => { h.time = timeEl.textContent.trim() || h.time; savePortfolioPageV2Debounced(); });
+    row.querySelector('.pfn-hour-del').addEventListener('click', () => {
+      portfolioPageV2.hours = portfolioPageV2.hours.filter(x => x.id !== h.id);
+      renderPortfolioPageV2();
+      persistSetting('portfolioPageV2', portfolioPageV2);
+    });
+    return row;
+  }
+
+  function buildPfnSocialRow(s){
+    const row = document.createElement('div');
+    row.className = 'pfn-social-row';
+    const link = document.createElement(editMode ? 'span' : 'a');
+    link.className = 'pfn-social-icon editable-field';
+    link.textContent = s.icon;
+    if(!editMode){ link.href = s.url || '#'; link.target = '_blank'; link.rel = 'noopener'; }
+    link.addEventListener('blur', () => { s.icon = link.textContent.trim() || s.icon; savePortfolioPageV2Debounced(); });
+    row.appendChild(link);
+    if(editMode){
+      const urlInput = document.createElement('input');
+      urlInput.type = 'text';
+      urlInput.className = 'pfn-social-url-input';
+      urlInput.placeholder = 'https://…';
+      urlInput.value = s.url || '';
+      urlInput.addEventListener('blur', () => { s.url = urlInput.value.trim(); savePortfolioPageV2Debounced(); });
+      row.appendChild(urlInput);
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'pfn-social-del';
+      delBtn.title = 'Hapus';
+      delBtn.textContent = '✕';
+      delBtn.addEventListener('click', () => {
+        portfolioPageV2.socials = portfolioPageV2.socials.filter(x => x.id !== s.id);
+        renderPortfolioPageV2();
+        persistSetting('portfolioPageV2', portfolioPageV2);
+      });
+      row.appendChild(delBtn);
+    }
+    return row;
+  }
+
+  function renderPortfolioPageV2(){
+    const heroEl = document.getElementById('pfnHero');
+    if(portfolioPageV2.heroBg){
+      heroEl.style.backgroundImage = 'linear-gradient(rgba(20,45,48,0.72), rgba(20,45,48,0.72)), ' + cssUrl(portfolioPageV2.heroBg);
+    }
+    document.getElementById('pfnHeroTitle').textContent = portfolioPageV2.heroTitle;
+    document.getElementById('pfnHeroSubtitle').textContent = portfolioPageV2.heroSubtitle;
+
+    document.getElementById('pfnServicesTitle').textContent = portfolioPageV2.servicesTitle;
+    renderPfnServices();
+
+    const valuesGrid = document.getElementById('pfnValuesGrid');
+    valuesGrid.innerHTML = '';
+    portfolioPageV2.values.forEach(v => valuesGrid.appendChild(buildPfnValueCard(v)));
+
+    document.getElementById('pfnKiosImg').src = portfolioPageV2.kiosImage || 'https://placehold.co/600x450?text=Kios';
+    document.getElementById('pfnKiosTitle').textContent = portfolioPageV2.kiosTitle;
+    document.getElementById('pfnKiosPara1').textContent = portfolioPageV2.kiosPara1;
+    document.getElementById('pfnKiosPara2').textContent = portfolioPageV2.kiosPara2;
+
+    document.getElementById('pfnBannerImg').src = portfolioPageV2.bannerImage || 'https://placehold.co/1600x420?text=Banner';
+
+    document.getElementById('pfnProgramTitle').textContent = portfolioPageV2.programTitle;
+    renderPfnPrograms();
+
+    document.getElementById('pfnFooterVisitTitle').textContent = portfolioPageV2.footerVisitTitle;
+    document.getElementById('pfnFooterAddress').textContent = portfolioPageV2.footerAddress;
+    document.getElementById('pfnFooterPhone').textContent = portfolioPageV2.footerPhone;
+    document.getElementById('pfnFooterHoursTitle').textContent = portfolioPageV2.footerHoursTitle;
+    const hoursList = document.getElementById('pfnHoursList');
+    hoursList.innerHTML = '';
+    portfolioPageV2.hours.forEach(h => hoursList.appendChild(buildPfnHourRow(h)));
+
+    document.getElementById('pfnFooterSocialTitle').textContent = portfolioPageV2.footerSocialTitle;
+    document.getElementById('pfnFooterSocialDesc').textContent = portfolioPageV2.footerSocialDesc;
+    const socialList = document.getElementById('pfnSocialList');
+    socialList.innerHTML = '';
+    portfolioPageV2.socials.forEach(s => socialList.appendChild(buildPfnSocialRow(s)));
+
+    document.getElementById('pfnCopyright').textContent = portfolioPageV2.copyright;
+
+    applyEditableState();
+  }
+  renderPortfolioPageV2();
+
+  function loadPortfolioPageV2(){
+    const saved = loadSyncedSetting('portfolioPageV2', x => x && typeof x === 'object');
+    if(saved){ portfolioPageV2 = Object.assign({}, portfolioPageV2, saved); }
+    renderPortfolioPageV2();
+  }
+
+  [
+    ['pfnHeroTitle','heroTitle'], ['pfnHeroSubtitle','heroSubtitle'],
+    ['pfnServicesTitle','servicesTitle'],
+    ['pfnKiosTitle','kiosTitle'], ['pfnKiosPara1','kiosPara1'], ['pfnKiosPara2','kiosPara2'],
+    ['pfnProgramTitle','programTitle'],
+    ['pfnFooterVisitTitle','footerVisitTitle'], ['pfnFooterAddress','footerAddress'], ['pfnFooterPhone','footerPhone'],
+    ['pfnFooterHoursTitle','footerHoursTitle'], ['pfnFooterSocialTitle','footerSocialTitle'], ['pfnFooterSocialDesc','footerSocialDesc'],
+    ['pfnCopyright','copyright']
+  ].forEach(([id, key]) => {
+    document.getElementById(id).addEventListener('blur', (e) => {
+      portfolioPageV2[key] = e.target.textContent.trim();
+      savePortfolioPageV2Debounced();
+    });
+  });
+
+  document.getElementById('pfnValueAddBtn').addEventListener('click', () => {
+    portfolioPageV2.values.push({ id:'v-' + crypto.randomUUID().slice(0,8), icon:'⭐', title:'Nilai Baru', desc:'Deskripsi singkat tentang nilai ini.' });
+    renderPortfolioPageV2();
+    persistSetting('portfolioPageV2', portfolioPageV2);
+  });
+  document.getElementById('pfnProgramAddBtn').addEventListener('click', () => {
+    portfolioPageV2.programs.push({ id:'p-' + crypto.randomUUID().slice(0,8), image:'https://placehold.co/400x300?text=Program', title:'Program Baru', desc:'Deskripsi singkat tentang program ini.' });
+    renderPortfolioPageV2();
+    persistSetting('portfolioPageV2', portfolioPageV2);
+  });
+  document.getElementById('pfnHoursAddBtn').addEventListener('click', () => {
+    portfolioPageV2.hours.push({ id:'h-' + crypto.randomUUID().slice(0,8), day:'Hari', time:'Tutup' });
+    renderPortfolioPageV2();
+    persistSetting('portfolioPageV2', portfolioPageV2);
+  });
+  document.getElementById('pfnSocialAddBtn').addEventListener('click', () => {
+    portfolioPageV2.socials.push({ id:'s-' + crypto.randomUUID().slice(0,8), icon:'🔗', url:'' });
+    renderPortfolioPageV2();
+    persistSetting('portfolioPageV2', portfolioPageV2);
+  });
+
+  function wirePfnDirectImageUpload(btnId, fileInputId, onLoaded, maxDim, quality){
+    const btn = document.getElementById(btnId);
+    const fileInput = document.getElementById(fileInputId);
+    btn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files && fileInput.files[0];
+      if(!file) return;
+      const original = btn.textContent;
+      btn.textContent = '⏳ Memproses…';
+      try{
+        const dataUrl = await readFileAsOptimizedDataUrl(file, maxDim || 1200, quality || 0.8);
+        onLoaded(dataUrl);
+      }catch(err){ alert('Gagal membaca gambar dari perangkat.'); }
+      btn.textContent = original;
+      fileInput.value = '';
+    });
+  }
+  wirePfnDirectImageUpload('pfnHeroBgEditBtn','pfnHeroBgFileInput', (dataUrl) => {
+    portfolioPageV2.heroBg = dataUrl;
+    renderPortfolioPageV2();
+    persistSetting('portfolioPageV2', portfolioPageV2);
+  }, 1400, 0.75);
+  wirePfnDirectImageUpload('pfnKiosImgEditBtn','pfnKiosImgFileInput', (dataUrl) => {
+    portfolioPageV2.kiosImage = dataUrl;
+    renderPortfolioPageV2();
+    persistSetting('portfolioPageV2', portfolioPageV2);
+  }, 900, 0.8);
+  wirePfnDirectImageUpload('pfnBannerEditBtn','pfnBannerFileInput', (dataUrl) => {
+    portfolioPageV2.bannerImage = dataUrl;
+    renderPortfolioPageV2();
+    persistSetting('portfolioPageV2', portfolioPageV2);
+  }, 1400, 0.75);
+
   // ---------- Anggota / Avatar ----------
   let knownUsers = [];
   let userPhotos = loadSyncedSetting('userPhotos', x => x && typeof x === 'object') || {};
@@ -5350,6 +6162,7 @@
     renderPortfolioProfile();
     renderPortfolioProjects();
     renderPaymentMethods();
+    renderPortfolioPageV2();
     if(!editMode) closeRtToolbar();
   });
 
@@ -5716,6 +6529,7 @@
     document.querySelectorAll('.editable-field').forEach(applyStyleToEditableField);
     applyBrandLogo();
     applyBrandAndProjectName();
+    applyAppBgColor();
     const savedPhotos = loadSyncedSetting('userPhotos', x => x && typeof x === 'object');
     if(savedPhotos){ userPhotos = savedPhotos; refreshCurrentUserAvatars(); }
     applySavedNavOrder();
@@ -5726,6 +6540,7 @@
     loadCartSettings();
     const savedPayments = loadSyncedSetting('paymentMethods', Array.isArray);
     if(savedPayments){ paymentMethods = savedPayments; renderPaymentMethods(); }
+    loadPortfolioPageV2();
   });
 
   // ---------- Tampilan publik (belum masuk): muat Produk & Portofolio langsung ----------
