@@ -27,6 +27,44 @@
     font-size:16px;
   }
   *{box-sizing:border-box;}
+
+  /* ---------- MODE GELAP (dark mode) ----------
+     Variabel warna hanya di-override untuk area konten utama (topbar, Papan Tugas,
+     Produk, Pengaturan, dan semua modal) agar tampilan Portofolio (halaman publik yang
+     sedang dirancang) tetap sesuai desain aslinya di kedua mode. */
+  body.theme-dark .main{
+    --paper:#1c1b18;
+    --paper-card:#262420;
+    --ink-dark:#ece7da;
+    --ink-mid:#b9b2a0;
+    --ink-soft:#8f8875;
+    --line:#3a362e;
+    --line-strong:#4a453b;
+    --white:#2e2b26;
+    background:#1c1b18;
+  }
+  body.theme-dark #viewPortfolio{
+    --paper:#efe9dc;
+    --paper-card:#f9f5ea;
+    --ink-dark:#201f1d;
+    --ink-mid:#5c564c;
+    --ink-soft:#8a8375;
+    --line:#d9d0b9;
+    --line-strong:#c4b99a;
+    --white:#fffdf7;
+  }
+  body.theme-dark .modal-overlay,
+  body.theme-dark .modal{
+    --paper:#1c1b18;
+    --paper-card:#262420;
+    --ink-dark:#ece7da;
+    --ink-mid:#b9b2a0;
+    --ink-soft:#8f8875;
+    --line:#3a362e;
+    --line-strong:#4a453b;
+    --white:#2e2b26;
+  }
+  body.theme-dark .card-list.drag-over{ background:#33302a; }
   html,body{height:100%;}
   body{
     margin:0;
@@ -423,6 +461,19 @@
     width:100%;
   }
   .add-ws:hover{ color:var(--paper); border-color:var(--ink-soft); }
+
+  .theme-toggle-wrap{ margin-top:18px; }
+  .theme-toggle-group{
+    display:flex; gap:4px; background:var(--ink-dark-2); border-radius:8px; padding:3px;
+  }
+  .theme-toggle-btn{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:5px;
+    padding:7px 6px; border:none; border-radius:6px; background:none; cursor:pointer;
+    font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:#c9c2b3;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .theme-toggle-btn:hover{ color:var(--paper); }
+  .theme-toggle-btn.active{ background:var(--ink-dark); color:var(--white); font-weight:500; }
 
   .sidebar-footer{
     margin-top:auto;
@@ -1127,18 +1178,6 @@
   .portfolio-card-title{ font-family:'Fraunces', serif; font-size:1.08rem; font-weight:500; color:var(--ink-dark); }
   .portfolio-card-desc{ font-size:0.8rem; color:var(--ink-mid); line-height:1.5; flex:1; }
   .portfolio-card-link{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--accent-teal-dark); margin-top:4px; }
-  .portfolio-card-doc{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; color:var(--accent-clay); margin-top:2px; text-decoration:underline; cursor:pointer; }
-  /* Tata letak kartu portofolio (bisa dipilih per kartu lewat menu edit) */
-  .portfolio-card.layout-left{ flex-direction:row; }
-  .portfolio-card.layout-left .portfolio-card-img,
-  .portfolio-card.layout-left .portfolio-card-video{ width:42%; aspect-ratio:auto; height:auto; flex-shrink:0; }
-  .portfolio-card.layout-left .portfolio-card-body{ flex:1; }
-  .portfolio-card.layout-overlay{ position:relative; min-height:280px; }
-  .portfolio-card.layout-overlay .portfolio-card-img,
-  .portfolio-card.layout-overlay .portfolio-card-video{ position:absolute; inset:0; width:100%; height:100%; aspect-ratio:auto; z-index:0; }
-  .portfolio-card.layout-overlay .portfolio-card-body{ position:relative; z-index:1; margin-top:auto; background:linear-gradient(0deg, rgba(20,19,17,0.82) 0%, rgba(20,19,17,0.55) 60%, transparent 100%); color:var(--white); min-height:55%; justify-content:flex-end; }
-  .portfolio-card.layout-overlay .portfolio-card-title{ color:var(--white); }
-  .portfolio-card.layout-overlay .portfolio-card-desc{ color:#e9e4d6; }
   .portfolio-admin-actions{ display:none; gap:6px; padding:0 17px 16px; }
   .edit-mode .portfolio-admin-actions{ display:flex; }
   .portfolio-admin-actions button{
@@ -1239,9 +1278,6 @@
     border-radius:5px; cursor:pointer; background:var(--white);
   }
   .modal-color-row span.color-hint{ font-size:0.72rem; color:var(--ink-mid); }
-  .modal-hint{ font-size:0.7rem; color:var(--ink-soft); margin:2px 0 8px; line-height:1.4; }
-  .modal-inline-row{ display:flex; gap:10px; }
-  .modal-inline-row > div{ flex:1; }
   .btn-ghost, .btn-primary{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; padding:9px 16px; border-radius:5px; cursor:pointer; border:1px solid transparent; }
   .btn-ghost{ background:none; border-color:var(--line-strong); color:var(--ink-mid); }
   .btn-ghost:hover{ border-color:var(--ink-mid); }
@@ -1761,6 +1797,14 @@
         </li>
       </ul>
       <button class="add-ws" id="addWorkspaceBtn">+ Ruang kerja baru</button>
+    </div>
+
+    <div class="theme-toggle-wrap">
+      <div class="side-label">Tampilan</div>
+      <div class="theme-toggle-group" id="themeToggleGroup">
+        <button type="button" class="theme-toggle-btn" data-theme="light" id="themeLightBtn">☀️ Terang</button>
+        <button type="button" class="theme-toggle-btn" data-theme="dark" id="themeDarkBtn">🌙 Gelap</button>
+      </div>
     </div>
 
     <div class="sidebar-footer">
@@ -2484,12 +2528,6 @@
     <input type="text" id="pfProjTitle" placeholder="mis. Redesain Aplikasi Perbankan">
     <label for="pfProjCategory">Kategori</label>
     <input type="text" id="pfProjCategory" placeholder="mis. UI/UX Design">
-    <label for="pfProjLayout" style="margin-top:14px;">Tata letak kartu</label>
-    <select id="pfProjLayout">
-      <option value="">Default (foto di atas)</option>
-      <option value="left">Foto di samping kiri</option>
-      <option value="overlay">Teks menumpuk di atas foto</option>
-    </select>
     <label for="pfProjMediaType" style="margin-top:14px;">Tipe media utama</label>
     <select id="pfProjMediaType">
       <option value="image">Gambar</option>
@@ -2498,7 +2536,6 @@
     <div id="pfProjImageFields">
       <label for="pfProjImage">URL gambar</label>
       <input type="text" id="pfProjImage" placeholder="https://…">
-      <p class="modal-hint">Bisa tempel tautan foto Google Drive (dibagikan publik) — otomatis diubah jadi tautan tampil langsung.</p>
       <div class="modal-upload-row">
         <img class="modal-img-preview" id="pfProjImagePreview" src="" alt="Pratinjau" style="display:none;">
         <button type="button" class="modal-upload-btn" id="pfProjUploadBtn">📁 Upload dari perangkat</button>
@@ -2522,46 +2559,22 @@
     </div>
     <label for="pfProjBgImage" style="margin-top:14px;">Foto latar kartu (opsional)</label>
     <input type="text" id="pfProjBgImage" placeholder="https://…">
-    <p class="modal-hint">Bisa tempel tautan foto Google Drive (dibagikan publik) — otomatis diubah jadi tautan tampil langsung.</p>
     <div class="modal-upload-row">
       <img class="modal-img-preview" id="pfProjBgImagePreview" src="" alt="Pratinjau" style="display:none;">
       <button type="button" class="modal-upload-btn" id="pfProjBgUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="pfProjBgFileInput" accept="image/*" style="display:none;">
       <button type="button" class="modal-upload-btn" id="pfProjBgClearBtn">✕ Hapus foto latar</button>
     </div>
-    <div class="modal-inline-row" style="margin-top:14px;">
-      <div>
-        <label for="pfProjTitleFontSize">Ukuran font judul</label>
-        <select id="pfProjTitleFontSize">
-          <option value="">Default</option>
-          <option value="0.9rem">Kecil</option>
-          <option value="1.08rem">Normal</option>
-          <option value="1.3rem">Besar</option>
-          <option value="1.6rem">Ekstra besar</option>
-        </select>
-      </div>
-      <div>
-        <label for="pfProjDescFontSize">Ukuran font deskripsi</label>
-        <select id="pfProjDescFontSize">
-          <option value="">Default</option>
-          <option value="0.7rem">Kecil</option>
-          <option value="0.8rem">Normal</option>
-          <option value="0.95rem">Besar</option>
-          <option value="1.1rem">Ekstra besar</option>
-        </select>
-      </div>
-    </div>
     <label for="pfProjDesc">Deskripsi singkat</label>
     <input type="text" id="pfProjDesc" placeholder="Satu-dua kalimat tentang proyek ini">
-    <label for="pfProjLink" style="margin-top:14px;">Tautan / redirect (opsional)</label>
-    <input type="text" id="pfProjLink" placeholder="https://… (pengunjung akan diarahkan ke sini)">
-    <p class="modal-hint">Atau lampirkan file — dokumen apa pun (PDF, Word, Excel, ZIP, dll.) atau foto — lewat tombol di bawah. Bisa juga tautan Google Drive yang dibagikan publik, otomatis dirapikan.</p>
+    <label for="pfProjLink">Tautan (opsional)</label>
+    <input type="text" id="pfProjLink" placeholder="https://… atau upload dokumen/foto di bawah">
     <div class="modal-upload-row">
-      <button type="button" class="modal-upload-btn" id="pfProjLinkUploadBtn">📁 Lampirkan file (semua jenis)</button>
-      <input type="file" id="pfProjLinkFileInput" style="display:none;">
+      <button type="button" class="modal-upload-btn" id="pfProjLinkUploadBtn">📁 Upload dokumen/foto</button>
+      <input type="file" id="pfProjLinkFileInput" accept="image/*,.pdf,.doc,.docx" style="display:none;">
       <button type="button" class="modal-upload-btn" id="pfProjLinkClearBtn">✕ Hapus tautan</button>
     </div>
-    <p style="font-size:0.72rem; color:var(--ink-soft); margin:6px 0 0;">Tips: kalau lampirkan file langsung, ukurannya harus cukup kecil supaya tersimpan ke database dan bisa dibuka pengunjung lain. Untuk file besar, lebih aman pakai tautan hosting (mis. Google Drive yang dibagikan publik).</p>
+    <p style="font-size:0.72rem; color:var(--ink-soft); margin:6px 0 0;">Tips: kalau upload dokumen/foto langsung, ukurannya harus cukup kecil supaya tersimpan ke database dan bisa dibuka pengunjung lain. Untuk file besar, lebih aman pakai tautan hosting (mis. Google Drive yang dibagikan publik).</p>
     <p class="modal-error" id="pfProjectError"></p>
     <div class="modal-actions">
       <button class="btn-ghost" id="pfProjectCancel">Batal</button>
@@ -2576,19 +2589,10 @@
     <h3>Ganti foto profil</h3>
     <label for="pfAvatarUrl">URL gambar</label>
     <input type="text" id="pfAvatarUrl" placeholder="https://…">
-    <p class="modal-hint">Bisa tempel tautan foto Google Drive (dibagikan publik) — otomatis diubah jadi tautan tampil langsung.</p>
     <div class="modal-upload-row">
       <img class="modal-img-preview" id="pfAvatarImagePreview" src="" alt="Pratinjau" style="display:none;border-radius:50%;">
       <button type="button" class="modal-upload-btn" id="pfAvatarUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="pfAvatarFileInput" accept="image/*" style="display:none;">
-    </div>
-    <label for="pfAvatarUrl2" style="margin-top:14px;">URL foto kedua (opsional)</label>
-    <input type="text" id="pfAvatarUrl2" placeholder="https://…">
-    <div class="modal-upload-row">
-      <img class="modal-img-preview" id="pfAvatarImagePreview2" src="" alt="Pratinjau" style="display:none;border-radius:50%;">
-      <button type="button" class="modal-upload-btn" id="pfAvatarUploadBtn2">📁 Upload dari perangkat</button>
-      <input type="file" id="pfAvatarFileInput2" accept="image/*" style="display:none;">
-      <button type="button" class="modal-upload-btn" id="pfAvatarClearBtn2">✕ Hapus foto kedua</button>
     </div>
     <label for="pfHeroBgColor" style="margin-top:14px;">Warna latar profil (hero)</label>
     <div class="modal-color-row">
@@ -3607,20 +3611,6 @@
     return 'url("' + String(str).replace(/"/g, '%22') + '")';
   }
 
-  // Mengubah tautan berbagi Google Drive (mis. dari menu "Bagikan" foto di Drive)
-  // menjadi tautan langsung yang bisa dipakai sebagai <img src>. Tautan lain (termasuk
-  // Google Photos) dibiarkan apa adanya karena Google Photos tidak selalu punya bentuk
-  // tautan langsung yang stabil.
-  function normalizeImageUrl(url){
-    url = (url || '').toString().trim();
-    if(!url) return url;
-    let m = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/)
-      || url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/)
-      || url.match(/drive\.google\.com\/uc\?(?:export=[a-z]+&)?id=([a-zA-Z0-9_-]+)/);
-    if(m && m[1]) return 'https://drive.google.com/uc?export=view&id=' + m[1];
-    return url;
-  }
-
   function readFileAsDataUrl(file){
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -3713,13 +3703,6 @@
       if(urlInput.value.trim()){ preview.src = urlInput.value.trim(); preview.style.display = 'block'; }
       else{ preview.style.display = 'none'; }
     });
-    urlInput.addEventListener('blur', () => {
-      const normalized = normalizeImageUrl(urlInput.value);
-      if(normalized && normalized !== urlInput.value.trim()){
-        urlInput.value = normalized;
-        urlInput.dispatchEvent(new Event('input', { bubbles:true }));
-      }
-    });
   }
   wireImageUpload('prodUploadBtn','prodFileInput','prodImage','prodImagePreview');
   wireImageUpload('pfProjUploadBtn','pfProjFileInput','pfProjImage','pfProjImagePreview');
@@ -3774,7 +3757,6 @@
   }
   wireGenericFileLinkUpload('pfProjLinkUploadBtn','pfProjLinkFileInput','pfProjLink','pfProjLinkClearBtn');
   wireImageUpload('pfAvatarUploadBtn','pfAvatarFileInput','pfAvatarUrl','pfAvatarImagePreview', 500, 0.82);
-  wireImageUpload('pfAvatarUploadBtn2','pfAvatarFileInput2','pfAvatarUrl2','pfAvatarImagePreview2', 500, 0.82);
   wireImageUpload('prodBgUploadBtn','prodBgFileInput','prodBgImage','prodBgImagePreview');
   wireImageUpload('pfProjBgUploadBtn','pfProjBgFileInput','pfProjBgImage','pfProjBgImagePreview');
   wireImageUpload('pfHeroBgUploadBtn','pfHeroBgFileInput','pfHeroBgImage','pfHeroBgImagePreview', 1400, 0.75);
@@ -3928,7 +3910,6 @@
   wireClearBg('prodBgClearBtn','prodBgImage','prodBgImagePreview');
   wireClearBg('pfProjBgClearBtn','pfProjBgImage','pfProjBgImagePreview');
   wireClearBg('pfHeroBgClearBtn','pfHeroBgImage','pfHeroBgImagePreview');
-  wireClearBg('pfAvatarClearBtn2','pfAvatarUrl2','pfAvatarImagePreview2');
   wireClearBg('inputImageClearBtn','inputImage','inputImagePreview');
   wireClearBg('paymentIconClearBtn','paymentIconUrl','paymentIconPreview');
   wireClearBg('paymentQrClearBtn','paymentQrUrl','paymentQrPreview');
@@ -4686,10 +4667,6 @@
     const pfAvatarPreview = document.getElementById('pfAvatarImagePreview');
     if(portfolioProfile.avatarUrl){ pfAvatarPreview.src = portfolioProfile.avatarUrl; pfAvatarPreview.style.display = 'block'; } else { pfAvatarPreview.style.display = 'none'; }
     document.getElementById('pfAvatarFileInput').value = '';
-    document.getElementById('pfAvatarUrl2').value = portfolioProfile.avatarUrl2 || '';
-    const pfAvatarPreview2 = document.getElementById('pfAvatarImagePreview2');
-    if(portfolioProfile.avatarUrl2){ pfAvatarPreview2.src = portfolioProfile.avatarUrl2; pfAvatarPreview2.style.display = 'block'; } else { pfAvatarPreview2.style.display = 'none'; }
-    document.getElementById('pfAvatarFileInput2').value = '';
     document.getElementById('pfHeroBgColor').value = portfolioProfile.heroBg || '#201f1d';
     document.getElementById('pfHeroBgImage').value = portfolioProfile.heroBgImage || '';
     document.getElementById('pfHeroBgSize').value = portfolioProfile.heroBgSize || 'cover';
@@ -4741,7 +4718,6 @@
   document.getElementById('pfAvatarOverlay').addEventListener('click', (e) => { if(e.target.id === 'pfAvatarOverlay') e.target.classList.remove('open'); });
   async function savePfAvatarModal(){
     portfolioProfile.avatarUrl = document.getElementById('pfAvatarUrl').value.trim() || portfolioProfile.avatarUrl;
-    portfolioProfile.avatarUrl2 = document.getElementById('pfAvatarUrl2').value.trim() || '';
     portfolioProfile.heroBg = document.getElementById('pfHeroBgColor').value || '';
     portfolioProfile.heroBgImage = document.getElementById('pfHeroBgImage').value.trim() || '';
     portfolioProfile.heroBgSize = document.getElementById('pfHeroBgSize').value || 'cover';
@@ -4749,7 +4725,7 @@
     renderPortfolioProfile();
     await savePortfolioProfile();
   }
-  wireAutoSave(['pfAvatarUrl','pfAvatarUrl2','pfHeroBgColor','pfHeroBgImage','pfHeroBgSize','pfHeroBgPosition'], savePfAvatarModal);
+  wireAutoSave(['pfAvatarUrl','pfHeroBgColor','pfHeroBgImage','pfHeroBgSize','pfHeroBgPosition'], savePfAvatarModal);
   document.getElementById('pfHeroBgPosition').addEventListener('change', () => {
     delete portfolioProfile.heroBgPosX;
     delete portfolioProfile.heroBgPosY;
@@ -4820,21 +4796,19 @@
 
   function renderPortfolioCard(p){
     const wrap = document.createElement('div');
-    wrap.className = 'portfolio-card' + (p.layout ? (' layout-' + p.layout) : '');
-    wrap.dataset.id = p.id;
+    wrap.className = 'portfolio-card';
     if(p.bgImage){ wrap.style.backgroundImage = cssUrl(p.bgImage); wrap.style.backgroundSize = 'cover'; wrap.style.backgroundPosition = 'center'; }
     else if(p.bgColor){ wrap.style.background = p.bgColor; }
     const mediaHtml = (p.mediaType === 'video' && p.videoUrl)
       ? `<video class="portfolio-card-video" src="${escapeHtml(p.videoUrl)}" muted loop playsinline controls></video>`
       : `<img class="portfolio-card-img" src="${escapeHtml(p.imageUrl || 'https://placehold.co/400x300?text=Proyek')}" alt="${escapeHtml(p.title)}" onerror="this.onerror=null;this.src='https://placehold.co/400x300?text=Proyek';">`;
-    const linkLabel = /^data:(?!image)/i.test(p.link || '') ? 'Buka dokumen →' : 'Lihat proyek →';
     wrap.innerHTML = `
       ${mediaHtml}
       <div class="portfolio-card-body">
         <span class="portfolio-card-category">${escapeHtml(p.category || 'Proyek')}</span>
-        <div class="portfolio-card-title"${p.titleFontSize ? ` style="font-size:${escapeHtml(p.titleFontSize)};"` : ''}>${escapeHtml(p.title)}</div>
-        <div class="portfolio-card-desc"${p.descFontSize ? ` style="font-size:${escapeHtml(p.descFontSize)};"` : ''}>${escapeHtml(p.description || '')}</div>
-        ${p.link ? `<span class="portfolio-card-link">${linkLabel}</span>` : ''}
+        <div class="portfolio-card-title">${escapeHtml(p.title)}</div>
+        <div class="portfolio-card-desc">${escapeHtml(p.description || '')}</div>
+        ${p.link ? `<span class="portfolio-card-link">Lihat proyek →</span>` : ''}
       </div>
       <div class="portfolio-admin-actions">
         <button class="edit-btn">✎ Edit</button>
@@ -4866,9 +4840,6 @@
     document.getElementById('pfProjectModalTitle').textContent = project ? 'Edit proyek' : 'Proyek baru';
     document.getElementById('pfProjTitle').value = project ? project.title : '';
     document.getElementById('pfProjCategory').value = project ? project.category : '';
-    document.getElementById('pfProjLayout').value = (project && project.layout) ? project.layout : '';
-    document.getElementById('pfProjTitleFontSize').value = (project && project.titleFontSize) ? project.titleFontSize : '';
-    document.getElementById('pfProjDescFontSize').value = (project && project.descFontSize) ? project.descFontSize : '';
     document.getElementById('pfProjMediaType').value = (project && project.mediaType === 'video') ? 'video' : 'image';
     updatePfProjMediaFieldsVisibility();
     document.getElementById('pfProjImage').value = project ? project.imageUrl : '';
@@ -4900,14 +4871,11 @@
       id: editingPortfolioProjectId,
       title,
       category: document.getElementById('pfProjCategory').value.trim(),
-      layout: document.getElementById('pfProjLayout').value || '',
-      titleFontSize: document.getElementById('pfProjTitleFontSize').value || '',
-      descFontSize: document.getElementById('pfProjDescFontSize').value || '',
       mediaType: document.getElementById('pfProjMediaType').value === 'video' ? 'video' : 'image',
-      imageUrl: normalizeImageUrl(document.getElementById('pfProjImage').value.trim()) || 'https://placehold.co/400x300?text=Proyek',
+      imageUrl: document.getElementById('pfProjImage').value.trim() || 'https://placehold.co/400x300?text=Proyek',
       videoUrl: document.getElementById('pfProjVideo').value.trim() || '',
       bgColor: document.getElementById('pfProjBgColor').value || '',
-      bgImage: normalizeImageUrl(document.getElementById('pfProjBgImage').value.trim()) || '',
+      bgImage: document.getElementById('pfProjBgImage').value.trim() || '',
       description: document.getElementById('pfProjDesc').value.trim(),
       link: document.getElementById('pfProjLink').value.trim(),
     };
@@ -4923,7 +4891,7 @@
       alert('Gagal menyimpan proyek ke server (koneksi bermasalah atau file terlalu besar), jadi pengunjung lain belum bisa melihat fotonya. Coba lagi dengan foto berukuran lebih kecil.');
     }
   }
-  wireAutoSave(['pfProjTitle','pfProjCategory','pfProjLayout','pfProjTitleFontSize','pfProjDescFontSize','pfProjMediaType','pfProjImage','pfProjVideo','pfProjBgColor','pfProjBgImage','pfProjDesc','pfProjLink'], savePortfolioProjectModal);
+  wireAutoSave(['pfProjTitle','pfProjCategory','pfProjMediaType','pfProjImage','pfProjVideo','pfProjBgColor','pfProjBgImage','pfProjDesc','pfProjLink'], savePortfolioProjectModal);
   document.getElementById('pfProjectSave').addEventListener('click', async () => {
     if(!document.getElementById('pfProjTitle').value.trim()){
       const errEl = document.getElementById('pfProjectError');
@@ -5719,6 +5687,24 @@
   window.addEventListener('resize', () => {
     if(window.innerWidth > 820) closeMobileSidebar();
   });
+
+  // ---------- Mode gelap / terang ----------
+  const themeLightBtn = document.getElementById('themeLightBtn');
+  const themeDarkBtn = document.getElementById('themeDarkBtn');
+  function applyTheme(theme){
+    document.body.classList.toggle('theme-dark', theme === 'dark');
+    if(themeLightBtn) themeLightBtn.classList.toggle('active', theme !== 'dark');
+    if(themeDarkBtn) themeDarkBtn.classList.toggle('active', theme === 'dark');
+  }
+  function setTheme(theme){
+    applyTheme(theme);
+    try{ localStorage.setItem('studioKerjaTheme', theme); }catch(e){}
+  }
+  let savedTheme = 'light';
+  try{ savedTheme = localStorage.getItem('studioKerjaTheme') || 'light'; }catch(e){}
+  applyTheme(savedTheme);
+  if(themeLightBtn) themeLightBtn.addEventListener('click', () => setTheme('light'));
+  if(themeDarkBtn) themeDarkBtn.addEventListener('click', () => setTheme('dark'));
 
   // ---------- Urutkan menu sidebar (naik/turun) ----------
   const navTabsEl = document.querySelector('.nav-tabs');
