@@ -4,15 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kios Sedekah — Dasbor Proyek</title>
+<meta name="description" content="Kios Sedekah — dasbor proyek untuk mengelola papan tugas tim, katalog produk, dan halaman portofolio publik, dengan sinkronisasi data secara real-time.">
+<meta name="theme-color" content="#201f1d">
+<meta name="robots" content="index, follow">
+<!-- Open Graph / social share preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kios Sedekah — Dasbor Proyek">
+<meta property="og:description" content="Kelola papan tugas, produk, dan portofolio tim dalam satu dasbor yang tersinkron otomatis.">
+<meta property="og:locale" content="id_ID">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kios Sedekah — Dasbor Proyek">
+<meta name="twitter:description" content="Kelola papan tugas, produk, dan portofolio tim dalam satu dasbor yang tersinkron otomatis.">
 <link rel="icon" id="faviconLink" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23201f1d'/%3E%3Crect x='9' y='9' width='14' height='14' rx='3' fill='%232f6e73' transform='rotate(45 16 16)'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink-dark:#201f1d;
     --ink-dark-2:#2b2925;
     --ink-mid:#5c564c;
-    --ink-soft:#8a8375;
+    --ink-soft:#75705f;
     --paper:#efe9dc;
     --paper-card:#f9f5ea;
     --line:#d9d0b9;
@@ -27,6 +39,16 @@
     font-size:16px;
   }
   *{box-sizing:border-box;}
+
+  /* ---------- Aksesibilitas: indikator fokus keyboard ----------
+     Ditambahkan agar pengguna yang bernavigasi dengan Tab/keyboard (bukan mouse)
+     tetap bisa melihat elemen mana yang sedang aktif/terpilih. */
+  a:focus-visible, button:focus-visible, input:focus-visible,
+  textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible{
+    outline:2px solid var(--accent-teal);
+    outline-offset:2px;
+    border-radius:4px;
+  }
 
   /* ---------- MODE GELAP (dark mode) ----------
      Variabel warna hanya di-override untuk area konten utama (topbar, Papan Tugas,
@@ -1714,7 +1736,7 @@
 <!-- ================= GERBANG AUTENTIKASI ================= -->
 <div class="auth-screen hidden" id="authScreen">
   <div class="auth-card">
-    <button type="button" class="auth-close" id="authCloseBtn" title="Tutup">✕</button>
+    <button type="button" class="auth-close" id="authCloseBtn" title="Tutup" aria-label="Tutup jendela masuk">✕</button>
     <div class="auth-brand">
       <div class="brand-mark"></div>
       <span>Studio Kerja</span>
@@ -1725,9 +1747,9 @@
       <h2>Masuk ke akunmu</h2>
       <p class="auth-sub">Gunakan email dan kata sandi yang sudah terdaftar.</p>
       <label for="loginEmail">Email</label>
-      <input type="email" id="loginEmail" placeholder="nama@gmail.com">
+      <input type="email" id="loginEmail" placeholder="nama@gmail.com" autocomplete="email">
       <label for="loginPassword">Kata sandi</label>
-      <input type="password" id="loginPassword" placeholder="••••••••">
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
       <p class="auth-error" id="loginError"></p>
       <button class="auth-submit" id="loginSubmit">Login</button>
       <div class="auth-links">
@@ -1741,13 +1763,13 @@
       <h2>Buat akun baru</h2>
       <p class="auth-sub">Kami akan mengirim kode OTP 6 digit ke Gmail-mu untuk verifikasi.</p>
       <label for="regName">Nama lengkap</label>
-      <input type="text" id="regName" placeholder="mis. Rania Anggraini">
+      <input type="text" id="regName" placeholder="mis. Rania Anggraini" autocomplete="name">
       <label for="regEmail">Alamat Gmail</label>
-      <input type="email" id="regEmail" placeholder="nama@gmail.com">
+      <input type="email" id="regEmail" placeholder="nama@gmail.com" autocomplete="email">
       <label for="regPassword">Kata sandi</label>
-      <input type="password" id="regPassword" placeholder="Minimal 6 karakter">
+      <input type="password" id="regPassword" placeholder="Minimal 8 karakter" minlength="8" autocomplete="new-password">
       <label for="regPasswordConfirm">Ulangi kata sandi</label>
-      <input type="password" id="regPasswordConfirm" placeholder="Ulangi kata sandi">
+      <input type="password" id="regPasswordConfirm" placeholder="Ulangi kata sandi" minlength="8" autocomplete="new-password">
       <p class="auth-error" id="regError"></p>
       <button class="auth-submit" id="regSubmit">Kirim kode OTP</button>
       <button class="auth-back-single" id="regBackToLogin">← Kembali ke login</button>
@@ -1769,7 +1791,7 @@
       <h2>Lupa kata sandi</h2>
       <p class="auth-sub">Masukkan email akunmu. Kode reset akan dikirim ke Gmail tersebut.</p>
       <label for="forgotEmail">Email terdaftar</label>
-      <input type="email" id="forgotEmail" placeholder="nama@gmail.com">
+      <input type="email" id="forgotEmail" placeholder="nama@gmail.com" autocomplete="email">
       <p class="auth-error" id="forgotError"></p>
       <button class="auth-submit" id="forgotSubmit">Kirim kode reset</button>
       <button class="auth-back-single" id="forgotBackToLogin">← Kembali ke login</button>
@@ -1782,7 +1804,7 @@
       <label for="forgotOtpCode">Kode OTP</label>
       <input type="text" id="forgotOtpCode" placeholder="123456" maxlength="6" inputmode="numeric">
       <label for="forgotNewPassword">Kata sandi baru</label>
-      <input type="password" id="forgotNewPassword" placeholder="Minimal 6 karakter">
+      <input type="password" id="forgotNewPassword" placeholder="Minimal 8 karakter" minlength="8" autocomplete="new-password">
       <p class="auth-error" id="forgotOtpError"></p>
       <button class="auth-submit" id="forgotOtpSubmit">Simpan kata sandi baru</button>
       <button class="auth-back-single" id="forgotOtpResend">Kirim ulang kode</button>
@@ -1797,33 +1819,33 @@
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark" id="brandMarkShape"></div>
-      <img class="brand-logo-img" id="brandLogoImg" src="" alt="Logo" style="display:none;">
-      <button type="button" class="brand-logo-editbtn" id="brandLogoEditBtn" title="Ganti logo">📁</button>
+      <img class="brand-logo-img" id="brandLogoImg" src="" alt="Logo" style="display:none;" loading="lazy">
+      <button type="button" class="brand-logo-editbtn" id="brandLogoEditBtn" title="Ganti logo" aria-label="Ganti logo">📁</button>
       <input type="file" id="brandLogoFileInput" accept="image/*" style="display:none;">
       <div class="brand-name editable-field" id="brandName">Studio Kerja</div>
     </div>
 
     <div class="nav-tabs">
-      <div class="nav-tab" data-view="board"><span class="nav-icon">📋</span> <span class="nav-label editable-field">Papan Tugas</span><div class="nav-reorder"><button type="button" class="nav-move" data-dir="up" title="Pindah ke atas">▲</button><button type="button" class="nav-move" data-dir="down" title="Pindah ke bawah">▼</button></div></div>
-      <div class="nav-tab" data-view="products"><span class="nav-icon">🛒</span> <span class="nav-label editable-field">Produk</span><div class="nav-reorder"><button type="button" class="nav-move" data-dir="up" title="Pindah ke atas">▲</button><button type="button" class="nav-move" data-dir="down" title="Pindah ke bawah">▼</button></div></div>
-      <div class="nav-tab active" data-view="portfolio"><span class="nav-icon">🎨</span> <span class="nav-label editable-field">Portofolio</span><div class="nav-reorder"><button type="button" class="nav-move" data-dir="up" title="Pindah ke atas">▲</button><button type="button" class="nav-move" data-dir="down" title="Pindah ke bawah">▼</button></div></div>
-      <div class="nav-tab" data-view="settings"><span class="nav-icon">⚙️</span> <span class="nav-label editable-field">Pengaturan</span><div class="nav-reorder"><button type="button" class="nav-move" data-dir="up" title="Pindah ke atas">▲</button><button type="button" class="nav-move" data-dir="down" title="Pindah ke bawah">▼</button></div></div>
+      <div class="nav-tab" data-view="board"><span class="nav-icon">📋</span> <span class="nav-label editable-field">Papan Tugas</span><div class="nav-reorder"><button type="button" class="nav-move" data-dir="up" title="Pindah ke atas" aria-label="Pindah ke atas">▲</button><button type="button" class="nav-move" data-dir="down" title="Pindah ke bawah" aria-label="Pindah ke bawah">▼</button></div></div>
+      <div class="nav-tab" data-view="products"><span class="nav-icon">🛒</span> <span class="nav-label editable-field">Produk</span><div class="nav-reorder"><button type="button" class="nav-move" data-dir="up" title="Pindah ke atas" aria-label="Pindah ke atas">▲</button><button type="button" class="nav-move" data-dir="down" title="Pindah ke bawah" aria-label="Pindah ke bawah">▼</button></div></div>
+      <div class="nav-tab active" data-view="portfolio"><span class="nav-icon">🎨</span> <span class="nav-label editable-field">Portofolio</span><div class="nav-reorder"><button type="button" class="nav-move" data-dir="up" title="Pindah ke atas" aria-label="Pindah ke atas">▲</button><button type="button" class="nav-move" data-dir="down" title="Pindah ke bawah" aria-label="Pindah ke bawah">▼</button></div></div>
+      <div class="nav-tab" data-view="settings"><span class="nav-icon">⚙️</span> <span class="nav-label editable-field">Pengaturan</span><div class="nav-reorder"><button type="button" class="nav-move" data-dir="up" title="Pindah ke atas" aria-label="Pindah ke atas">▲</button><button type="button" class="nav-move" data-dir="down" title="Pindah ke bawah" aria-label="Pindah ke bawah">▼</button></div></div>
     </div>
 
     <div class="workspace-section" id="workspaceSection">
       <div class="side-label">Ruang Kerja</div>
       <ul class="workspace-list" id="workspaceList">
         <li class="workspace-item active" data-id="ws1" data-name="Peluncuran Aplikasi Beranda">
-          <span class="ws-dot" style="background:#2f6e73"></span><span class="ws-name editable-field">Peluncuran Aplikasi</span><button class="ws-delete" title="Hapus">✕</button>
+          <span class="ws-dot" style="background:#2f6e73"></span><span class="ws-name editable-field">Peluncuran Aplikasi</span><button class="ws-delete" title="Hapus" aria-label="Hapus">✕</button>
         </li>
         <li class="workspace-item" data-id="ws2" data-name="Kampanye Pemasaran Q3">
-          <span class="ws-dot" style="background:#c98a3d"></span><span class="ws-name editable-field">Kampanye Pemasaran</span><button class="ws-delete" title="Hapus">✕</button>
+          <span class="ws-dot" style="background:#c98a3d"></span><span class="ws-name editable-field">Kampanye Pemasaran</span><button class="ws-delete" title="Hapus" aria-label="Hapus">✕</button>
         </li>
         <li class="workspace-item" data-id="ws3" data-name="Riset & Desain Produk">
-          <span class="ws-dot" style="background:#6b7d4f"></span><span class="ws-name editable-field">Riset & Desain</span><button class="ws-delete" title="Hapus">✕</button>
+          <span class="ws-dot" style="background:#6b7d4f"></span><span class="ws-name editable-field">Riset & Desain</span><button class="ws-delete" title="Hapus" aria-label="Hapus">✕</button>
         </li>
         <li class="workspace-item" data-id="ws4" data-name="Operasional Internal">
-          <span class="ws-dot" style="background:#b65c4a"></span><span class="ws-name editable-field">Operasional Internal</span><button class="ws-delete" title="Hapus">✕</button>
+          <span class="ws-dot" style="background:#b65c4a"></span><span class="ws-name editable-field">Operasional Internal</span><button class="ws-delete" title="Hapus" aria-label="Hapus">✕</button>
         </li>
       </ul>
       <button class="add-ws" id="addWorkspaceBtn">+ Ruang kerja baru</button>
@@ -1843,7 +1865,7 @@
     </div>
   </aside>
 
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
 
   <main class="main">
     <div class="curtain-doors" id="curtainDoors" aria-hidden="true">
@@ -1860,7 +1882,7 @@
         </div>
       </div>
       <div class="topbar-right">
-        <button type="button" class="cart-fab-btn" id="cartOpenBtn" title="Lihat keranjang belanja">
+        <button type="button" class="cart-fab-btn" id="cartOpenBtn" title="Lihat keranjang belanja" aria-label="Lihat keranjang belanja">
           🛒 Keranjang<span class="cart-badge" id="cartBadgeCount" style="display:none;">0</span>
         </button>
         <button class="invite-btn" id="publicLoginBtn">Masuk</button>
@@ -1873,9 +1895,9 @@
     <section class="view" id="viewBoard">
       <div class="board-banner-wrap" id="boardBannerWrap" style="display:none;">
         <div class="board-banner">
-          <button class="banner-nav prev" id="bannerPrev" title="Sebelumnya">‹</button>
+          <button class="banner-nav prev" id="bannerPrev" title="Sebelumnya" aria-label="Banner sebelumnya">‹</button>
           <div class="banner-track" id="bannerTrack"></div>
-          <button class="banner-nav next" id="bannerNext" title="Berikutnya">›</button>
+          <button class="banner-nav next" id="bannerNext" title="Berikutnya" aria-label="Banner berikutnya">›</button>
         </div>
         <div class="banner-dots" id="bannerDots"></div>
         <div class="banner-empty" id="bannerEmpty">
@@ -1924,7 +1946,7 @@
             <div class="product-search-wrap" id="productSearchWrap">
               <span class="search-icon">🔍</span>
               <input type="text" id="productSearchInput" placeholder="Cari nama produk atau lokasi…">
-              <button type="button" class="product-search-clear" id="productSearchClearBtn" title="Hapus pencarian">✕</button>
+              <button type="button" class="product-search-clear" id="productSearchClearBtn" title="Hapus pencarian" aria-label="Hapus pencarian">✕</button>
             </div>
           </div>
           <div class="product-grid" id="productGrid"></div>
@@ -1967,7 +1989,7 @@
 
         <div class="pfn-section pfn-kios-section">
           <div class="pfn-kios-imgwrap">
-            <img class="pfn-kios-img" id="pfnKiosImg" src="" alt="Kios Sedekah">
+            <img class="pfn-kios-img" id="pfnKiosImg" src="" alt="Kios Sedekah" loading="lazy">
             <button type="button" class="pfn-img-editbtn" id="pfnKiosImgEditBtn">📁 Ganti Foto</button>
             <input type="file" id="pfnKiosImgFileInput" accept="image/*" style="display:none;">
           </div>
@@ -1979,7 +2001,7 @@
         </div>
 
         <div class="pfn-banner-wrap">
-          <img class="pfn-banner-img" id="pfnBannerImg" src="" alt="Banner">
+          <img class="pfn-banner-img" id="pfnBannerImg" src="" alt="Banner" loading="lazy">
           <button type="button" class="pfn-img-editbtn" id="pfnBannerEditBtn">📁 Ganti Foto Banner</button>
           <input type="file" id="pfnBannerFileInput" accept="image/*" style="display:none;">
         </div>
@@ -2027,12 +2049,12 @@
             <div class="pf-hero-drag-overlay" id="pfHeroDragOverlay" title="Geser untuk mengatur posisi foto latar"></div>
             <div class="portfolio-avatars-row">
               <div class="portfolio-avatar-wrap" id="pfAvatarWrap">
-                <img class="portfolio-avatar" id="pfAvatar" src="https://placehold.co/240x240/2f6e73/ffffff?text=Foto" alt="Foto profil">
-                <button type="button" class="pf-avatar-addbtn" id="pfAvatarQuickBtn" title="Tambah/ganti foto profil">📷</button>
+                <img class="portfolio-avatar" id="pfAvatar" src="https://placehold.co/240x240/2f6e73/ffffff?text=Foto" alt="Foto profil" loading="lazy">
+                <button type="button" class="pf-avatar-addbtn" id="pfAvatarQuickBtn" title="Tambah/ganti foto profil" aria-label="Tambah/ganti foto profil">📷</button>
               </div>
               <div class="portfolio-avatar-wrap" id="pfAvatarWrap2">
-                <img class="portfolio-avatar" id="pfAvatar2" src="https://placehold.co/240x240/6b7d4f/ffffff?text=Foto" alt="Foto kedua">
-                <button type="button" class="pf-avatar-addbtn" id="pfAvatarQuickBtn2" title="Tambah/ganti foto kedua">📷</button>
+                <img class="portfolio-avatar" id="pfAvatar2" src="https://placehold.co/240x240/6b7d4f/ffffff?text=Foto" alt="Foto kedua" loading="lazy">
+                <button type="button" class="pf-avatar-addbtn" id="pfAvatarQuickBtn2" title="Tambah/ganti foto kedua" aria-label="Tambah/ganti foto kedua">📷</button>
                 <input type="file" id="pfAvatar2FileInput" accept="image/*" style="display:none;">
               </div>
             </div>
@@ -2082,7 +2104,7 @@
             <div class="settings-row-body" style="margin-left:0;">
               <div class="profile-card">
                 <div class="profile-card-avatar-wrap">
-                  <img id="acctAvatar" src="https://placehold.co/160x160/2f6e73/ffffff?text=Foto" alt="Foto profil">
+                  <img id="acctAvatar" src="https://placehold.co/160x160/2f6e73/ffffff?text=Foto" alt="Foto profil" loading="lazy">
                   <span class="profile-status-dot" id="acctStatusDot"></span>
                   <span class="profile-status-pill" id="acctStatusPill">Offline</span>
                 </div>
@@ -2268,7 +2290,7 @@
     <label for="inputTag">Kategori</label>
     <div class="tag-select-row">
       <select id="inputTag"></select>
-      <button type="button" class="tag-add-btn" id="tagAddBtn" title="Tambah kategori baru">+</button>
+      <button type="button" class="tag-add-btn" id="tagAddBtn" title="Tambah kategori baru" aria-label="Tambah kategori baru">+</button>
     </div>
     <div class="tag-add-form" id="tagAddForm" style="display:none;">
       <input type="text" id="tagAddInput" placeholder="mis. Pemasaran" maxlength="24">
@@ -2282,7 +2304,7 @@
     <label for="inputImage" style="margin-top:14px;">Gambar tugas (opsional)</label>
     <input type="text" id="inputImage" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="inputImagePreview" src="" alt="Pratinjau" style="display:none;">
+      <img class="modal-img-preview" id="inputImagePreview" src="" alt="Pratinjau" style="display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="inputImageUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="inputImageFileInput" accept="image/*" style="display:none;">
       <button type="button" class="modal-upload-btn" id="inputImageClearBtn">✕ Hapus gambar</button>
@@ -2292,7 +2314,7 @@
     <label for="inputStatus">Kolom</label>
     <div class="tag-select-row">
       <select id="inputStatus"></select>
-      <button type="button" class="tag-add-btn" id="colAddBtn" title="Tambah kolom baru">+</button>
+      <button type="button" class="tag-add-btn" id="colAddBtn" title="Tambah kolom baru" aria-label="Tambah kolom baru">+</button>
     </div>
     <div class="tag-add-form" id="colAddForm" style="display:none;">
       <input type="text" id="colAddInput" placeholder="mis. Menunggu Review" maxlength="24">
@@ -2321,7 +2343,7 @@
       <label for="bannerImage" style="margin-top:14px;">URL gambar</label>
       <input type="text" id="bannerImage" placeholder="https://…">
       <div class="modal-upload-row">
-        <img class="modal-img-preview" id="bannerImagePreview" src="" alt="Pratinjau" style="display:none;">
+        <img class="modal-img-preview" id="bannerImagePreview" src="" alt="Pratinjau" style="display:none;" loading="lazy">
         <button type="button" class="modal-upload-btn" id="bannerUploadBtn">📁 Upload dari perangkat</button>
         <input type="file" id="bannerFileInput" accept="image/*" style="display:none;">
       </div>
@@ -2371,13 +2393,13 @@
     <option value="3rem">Judul besar</option>
   </select>
   <input type="color" id="rtColor" title="Warna teks" value="#20211f">
-  <button type="button" id="rtColorReset" title="Pakai warna bawaan">↺</button>
+  <button type="button" id="rtColorReset" title="Pakai warna bawaan" aria-label="Pakai warna bawaan">↺</button>
   <span class="rt-sep"></span>
-  <button type="button" id="rtBold" title="Bold (tebal)"><b>B</b></button>
-  <button type="button" id="rtItalic" title="Italic (miring)"><i>I</i></button>
-  <button type="button" id="rtUnderline" title="Underline (garis bawah)"><u>U</u></button>
+  <button type="button" id="rtBold" title="Bold (tebal)" aria-label="Bold (tebal)"><b>B</b></button>
+  <button type="button" id="rtItalic" title="Italic (miring)" aria-label="Italic (miring)"><i>I</i></button>
+  <button type="button" id="rtUnderline" title="Underline (garis bawah)" aria-label="Underline (garis bawah)"><u>U</u></button>
   <span class="rt-sep"></span>
-  <button type="button" id="rtReset" title="Hapus semua format">Reset</button>
+  <button type="button" id="rtReset" title="Hapus semua format" aria-label="Hapus semua format">Reset</button>
 </div>
 
 <!-- MODAL PENGATURAN FOTO PROFIL (avatar topbar) -->
@@ -2387,7 +2409,7 @@
     <label for="userPhotoImage">URL gambar</label>
     <input type="text" id="userPhotoImage" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="userPhotoPreview" src="" alt="Pratinjau" style="border-radius:50%; display:none;">
+      <img class="modal-img-preview" id="userPhotoPreview" src="" alt="Pratinjau" style="border-radius:50%; display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="userPhotoUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="userPhotoFileInput" accept="image/*" style="display:none;">
     </div>
@@ -2428,7 +2450,7 @@
     <label for="acctAvatarUrl">URL foto</label>
     <input type="text" id="acctAvatarUrl" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="acctAvatarPreview" src="" alt="Pratinjau" style="border-radius:50%; display:none;">
+      <img class="modal-img-preview" id="acctAvatarPreview" src="" alt="Pratinjau" style="border-radius:50%; display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="acctAvatarUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="acctAvatarFileInput" accept="image/*" style="display:none;">
     </div>
@@ -2462,7 +2484,7 @@
     <label for="paymentIconUrl">Ikon / logo (URL gambar, opsional)</label>
     <input type="text" id="paymentIconUrl" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="paymentIconPreview" src="" alt="Pratinjau" style="display:none;">
+      <img class="modal-img-preview" id="paymentIconPreview" src="" alt="Pratinjau" style="display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="paymentIconUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="paymentIconFileInput" accept="image/*" style="display:none;">
       <button type="button" class="modal-upload-btn" id="paymentIconClearBtn">✕ Hapus logo</button>
@@ -2479,7 +2501,7 @@
     <label for="paymentQrUrl" style="margin-top:14px;">Kode QR (opsional, mis. QRIS)</label>
     <input type="text" id="paymentQrUrl" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="paymentQrPreview" src="" alt="Pratinjau QR" style="display:none;">
+      <img class="modal-img-preview" id="paymentQrPreview" src="" alt="Pratinjau QR" style="display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="paymentQrUploadBtn">📁 Upload kode QR</button>
       <input type="file" id="paymentQrFileInput" accept="image/*" style="display:none;">
       <button type="button" class="modal-upload-btn" id="paymentQrClearBtn">✕ Hapus QR</button>
@@ -2500,7 +2522,7 @@
 <div class="modal-overlay" id="paymentQrViewOverlay">
   <div class="modal" style="text-align:center;">
     <h3 id="paymentQrViewTitle">Kode QR</h3>
-    <img id="paymentQrViewImg" src="" alt="Kode QR" style="width:100%; max-width:280px; border-radius:8px; border:1px solid var(--line-strong);">
+    <img id="paymentQrViewImg" src="" alt="Kode QR" style="width:100%; max-width:280px; border-radius:8px; border:1px solid var(--line-strong);" loading="lazy">
     <div class="modal-actions" style="justify-content:center;">
       <button class="btn-ghost" id="paymentQrViewClose">Tutup</button>
     </div>
@@ -2516,7 +2538,7 @@
     <label for="prodImage">URL gambar</label>
     <input type="text" id="prodImage" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="prodImagePreview" src="" alt="Pratinjau" style="display:none;">
+      <img class="modal-img-preview" id="prodImagePreview" src="" alt="Pratinjau" style="display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="prodUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="prodFileInput" accept="image/*" style="display:none;">
     </div>
@@ -2528,7 +2550,7 @@
     <label for="prodBgImage" style="margin-top:14px;">Foto latar kartu (opsional)</label>
     <input type="text" id="prodBgImage" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="prodBgImagePreview" src="" alt="Pratinjau" style="display:none;">
+      <img class="modal-img-preview" id="prodBgImagePreview" src="" alt="Pratinjau" style="display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="prodBgUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="prodBgFileInput" accept="image/*" style="display:none;">
       <button type="button" class="modal-upload-btn" id="prodBgClearBtn">✕ Hapus foto latar</button>
@@ -2572,7 +2594,7 @@
       <label for="pfProjImage">URL gambar</label>
       <input type="text" id="pfProjImage" placeholder="https://…">
       <div class="modal-upload-row">
-        <img class="modal-img-preview" id="pfProjImagePreview" src="" alt="Pratinjau" style="display:none;">
+        <img class="modal-img-preview" id="pfProjImagePreview" src="" alt="Pratinjau" style="display:none;" loading="lazy">
         <button type="button" class="modal-upload-btn" id="pfProjUploadBtn">📁 Upload dari perangkat</button>
         <input type="file" id="pfProjFileInput" accept="image/*" style="display:none;">
       </div>
@@ -2595,7 +2617,7 @@
     <label for="pfProjBgImage" style="margin-top:14px;">Foto latar kartu (opsional)</label>
     <input type="text" id="pfProjBgImage" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="pfProjBgImagePreview" src="" alt="Pratinjau" style="display:none;">
+      <img class="modal-img-preview" id="pfProjBgImagePreview" src="" alt="Pratinjau" style="display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="pfProjBgUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="pfProjBgFileInput" accept="image/*" style="display:none;">
       <button type="button" class="modal-upload-btn" id="pfProjBgClearBtn">✕ Hapus foto latar</button>
@@ -2625,7 +2647,7 @@
     <label for="pfAvatarUrl">URL gambar</label>
     <input type="text" id="pfAvatarUrl" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="pfAvatarImagePreview" src="" alt="Pratinjau" style="display:none;border-radius:50%;">
+      <img class="modal-img-preview" id="pfAvatarImagePreview" src="" alt="Pratinjau" style="display:none;border-radius:50%;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="pfAvatarUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="pfAvatarFileInput" accept="image/*" style="display:none;">
     </div>
@@ -2637,7 +2659,7 @@
     <label for="pfHeroBgImage" style="margin-top:14px;">Foto latar hero (opsional)</label>
     <input type="text" id="pfHeroBgImage" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="pfHeroBgImagePreview" src="" alt="Pratinjau" style="display:none;">
+      <img class="modal-img-preview" id="pfHeroBgImagePreview" src="" alt="Pratinjau" style="display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="pfHeroBgUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="pfHeroBgFileInput" accept="image/*" style="display:none;">
       <button type="button" class="modal-upload-btn" id="pfHeroBgClearBtn">✕ Hapus foto latar</button>
@@ -2677,7 +2699,7 @@
     <label for="pfnHeroBgUrlInput">URL gambar</label>
     <input type="text" id="pfnHeroBgUrlInput" placeholder="https://…">
     <div class="modal-upload-row">
-      <img class="modal-img-preview" id="pfnHeroBgModalPreview" src="" alt="Pratinjau" style="display:none;">
+      <img class="modal-img-preview" id="pfnHeroBgModalPreview" src="" alt="Pratinjau" style="display:none;" loading="lazy">
       <button type="button" class="modal-upload-btn" id="pfnHeroBgModalUploadBtn">📁 Upload dari perangkat</button>
       <input type="file" id="pfnHeroBgModalFileInput" accept="image/*" style="display:none;">
     </div>
@@ -2727,7 +2749,7 @@
       <p style="font-size:0.82rem; color:var(--ink-mid); margin:0 0 4px;">Pilih metode pembayaran, lalu pesanan akan dikirim ke WhatsApp admin:</p>
       <div class="cart-payment-list" id="cartPaymentList"></div>
       <div class="cart-payment-qr-preview" id="cartPaymentQrPreview">
-        <img id="cartPaymentQrImg" src="" alt="Kode QR">
+        <img id="cartPaymentQrImg" src="" alt="Kode QR" loading="lazy">
         <p>Pindai kode QR di atas untuk membayar, lalu kirim konfirmasi lewat WhatsApp.</p>
       </div>
       <p class="modal-error" id="cartPaymentError"></p>
@@ -2751,6 +2773,11 @@
 
   let scriptUrl = CONFIG.SCRIPT_URL || '';
   let currentUser = null;
+  // v4.4: token sesi yang diterbitkan SERVER saat login/daftar berhasil.
+  // Semua aksi sensitif (hapus produk, ubah role, dsb) sekarang membawa
+  // token ini, dan server memverifikasi ulang siapa pemiliknya — bukan
+  // sekadar mempercayai email yang dikirim browser.
+  let sessionToken = null;
   let currentWorkspace = 'ws1';
 
   // =====================================================================
@@ -2870,7 +2897,7 @@
     const wrap = document.getElementById('tagManageList');
     if(!wrap) return;
     wrap.innerHTML = categories.map(c =>
-      `<span class="tag-manage-chip" style="background:${c.color}">${escapeHtml(c.label)}<button type="button" data-remove-tag="${c.id}" title="Hapus kategori">✕</button></span>`
+      `<span class="tag-manage-chip" style="background:${c.color}">${escapeHtml(c.label)}<button type="button" data-remove-tag="${c.id}" title="Hapus kategori" aria-label="Hapus kategori">✕</button></span>`
     ).join('');
     wrap.querySelectorAll('[data-remove-tag]').forEach(btn => {
       btn.addEventListener('click', () => removeCategory(btn.getAttribute('data-remove-tag')));
@@ -2927,7 +2954,7 @@
     const wrap = document.getElementById('colManageList');
     if(!wrap) return;
     wrap.innerHTML = columns.map(c =>
-      `<span class="tag-manage-chip" style="background:${c.color}">${escapeHtml(c.label)}<button type="button" data-remove-col="${c.id}" title="Hapus kolom">✕</button></span>`
+      `<span class="tag-manage-chip" style="background:${c.color}">${escapeHtml(c.label)}<button type="button" data-remove-col="${c.id}" title="Hapus kolom" aria-label="Hapus kolom">✕</button></span>`
     ).join('');
     wrap.querySelectorAll('[data-remove-col]').forEach(btn => {
       btn.addEventListener('click', () => removeColumn(btn.getAttribute('data-remove-col')));
@@ -3108,17 +3135,17 @@
       const row = document.createElement('div');
       row.className = 'cart-item-row';
       row.innerHTML = `
-        <img class="cart-item-img" src="${escapeHtml(item.imageUrl || 'https://placehold.co/100x100?text=Produk')}" alt="" onerror="this.onerror=null;this.src='https://placehold.co/100x100?text=Produk';">
+        <img class="cart-item-img" src="${escapeHtml(item.imageUrl || 'https://placehold.co/100x100?text=Produk')}" alt="" onerror="this.onerror=null;this.src='https://placehold.co/100x100?text=Produk';" loading="lazy">
         <div class="cart-item-info">
           <span class="cart-item-name">${escapeHtml(item.name)}</span>
           <span class="cart-item-price">${formatRupiah(item.price)} x ${item.qty} = ${formatRupiah(item.price * item.qty)}</span>
         </div>
         <div class="cart-item-qty">
-          <button type="button" class="cart-qty-minus" title="Kurangi">−</button>
+          <button type="button" class="cart-qty-minus" title="Kurangi" aria-label="Kurangi">−</button>
           <span>${item.qty}</span>
-          <button type="button" class="cart-qty-plus" title="Tambah">+</button>
+          <button type="button" class="cart-qty-plus" title="Tambah" aria-label="Tambah">+</button>
         </div>
-        <button type="button" class="cart-item-remove" title="Hapus dari keranjang">✕</button>`;
+        <button type="button" class="cart-item-remove" title="Hapus dari keranjang" aria-label="Hapus dari keranjang">✕</button>`;
       row.querySelector('.cart-qty-minus').addEventListener('click', () => changeCartQty(item.id, -1));
       row.querySelector('.cart-qty-plus').addEventListener('click', () => changeCartQty(item.id, 1));
       row.querySelector('.cart-item-remove').addEventListener('click', () => removeFromCart(item.id));
@@ -3163,7 +3190,7 @@
     enabled.forEach((pm, i) => {
       const opt = document.createElement('label');
       opt.className = 'cart-payment-option' + (i === 0 ? ' selected' : '');
-      const iconInner = pm.icon ? `<img src="${escapeHtml(pm.icon)}" alt="">` : escapeHtml(pm.emoji || '💳');
+      const iconInner = pm.icon ? `<img src="${escapeHtml(pm.icon)}" alt="" loading="lazy">` : escapeHtml(pm.emoji || '💳');
       opt.innerHTML = `
         <input type="radio" name="cartPaymentChoice" value="${pm.id}" ${i === 0 ? 'checked' : ''}>
         <div class="payment-method-icon">${iconInner}</div>
@@ -3290,10 +3317,11 @@
   }
 
   async function apiPost(action, payload){
+    const body = Object.assign({ action, sessionToken: sessionToken || undefined }, payload);
     const res = await fetch(scriptUrl, {
       method:'POST',
       headers:{ 'Content-Type':'text/plain;charset=utf-8' },
-      body: JSON.stringify(Object.assign({ action }, payload))
+      body: JSON.stringify(body)
     });
     return res.json();
   }
@@ -3346,8 +3374,8 @@
     const chipClass = state === 'overdue' ? 'overdue' : (state === 'done' ? 'done' : '');
     const chipIcon = state === 'overdue' ? '⚑ ' : '';
     card.innerHTML = `
-      <button class="task-delete" data-id="${task.id}" title="Hapus tugas">✕</button>
-      ${task.imageUrl ? `<img class="task-card-img" src="${escapeHtml(task.imageUrl)}" alt="">` : ''}
+      <button class="task-delete" data-id="${task.id}" title="Hapus tugas" aria-label="Hapus tugas">✕</button>
+      ${task.imageUrl ? `<img class="task-card-img" src="${escapeHtml(task.imageUrl)}" alt="" loading="lazy">` : ''}
       <span class="task-tag" style="background:${tagColor(task.tag)}">${escapeHtml(tagLabel(task.tag))}</span>
       <div class="task-title">${escapeHtml(task.title)}</div>
       ${task.desc ? `<div class="task-desc">${escapeHtml(task.desc)}</div>` : ''}
@@ -3450,13 +3478,13 @@
       if(b.mediaType === 'video' && b.videoUrl){
         mediaHtml = `<video src="${escapeHtml(b.videoUrl)}" autoplay muted loop playsinline></video>`;
       }else{
-        mediaHtml = `<div class="banner-slide-imgwrap"><img src="${escapeHtml(b.imageUrl)}" alt="" draggable="false" style="object-position:${posX}% ${posY}%;"></div>`;
+        mediaHtml = `<div class="banner-slide-imgwrap"><img src="${escapeHtml(b.imageUrl)}" alt="" draggable="false" style="object-position:${posX}% ${posY}%;" loading="lazy"></div>`;
       }
       slide.innerHTML = (b.link && !editMode) ? `<a href="${escapeHtml(b.link)}" target="_blank" rel="noopener">${mediaHtml}</a>` : mediaHtml;
       const editWrap = document.createElement('div');
       editWrap.className = 'banner-slide-edit';
-      const posBtnHtml = (b.mediaType !== 'video') ? `<button type="button" class="banner-posdrag-btn" title="Geser posisi gambar">✥</button>` : '';
-      editWrap.innerHTML = `${posBtnHtml}<button type="button" class="banner-edit-btn" title="Edit banner">✎</button><button type="button" class="banner-del-btn" title="Hapus banner">✕</button>`;
+      const posBtnHtml = (b.mediaType !== 'video') ? `<button type="button" class="banner-posdrag-btn" title="Geser posisi gambar" aria-label="Geser posisi gambar">✥</button>` : '';
+      editWrap.innerHTML = `${posBtnHtml}<button type="button" class="banner-edit-btn" title="Edit banner" aria-label="Edit banner">✎</button><button type="button" class="banner-del-btn" title="Hapus banner" aria-label="Hapus banner">✕</button>`;
       editWrap.querySelector('.banner-edit-btn').addEventListener('click', (e) => { e.stopPropagation(); openBannerModal(b); });
       editWrap.querySelector('.banner-del-btn').addEventListener('click', (e) => {
         e.stopPropagation();
@@ -4000,7 +4028,7 @@
       const li = document.createElement('li');
       li.className = 'product-cat-item' + (activeProductCategory === cat.id ? ' active' : '');
       li.dataset.id = cat.id;
-      li.innerHTML = `<span class="cat-icon">${cat.icon || '📦'}</span><span class="cat-label editable-field">${escapeHtml(cat.label)}</span><span class="cat-count">${count}</span><button type="button" class="cat-delete" title="Hapus kategori">✕</button>`;
+      li.innerHTML = `<span class="cat-icon">${cat.icon || '📦'}</span><span class="cat-label editable-field">${escapeHtml(cat.label)}</span><span class="cat-count">${count}</span><button type="button" class="cat-delete" title="Hapus kategori" aria-label="Hapus kategori">✕</button>`;
       li.addEventListener('click', (e) => {
         if(e.target.closest('.cat-delete') || e.target.isContentEditable) return;
         activeProductCategory = cat.id;
@@ -4065,7 +4093,7 @@
     else if(p.bgColor){ card.style.background = p.bgColor; }
     const hasDiscount = Number(p.discountPercent) > 0;
     card.innerHTML = `
-      <img class="product-img" src="${escapeHtml(p.imageUrl || 'https://placehold.co/300x300?text=Produk')}" alt="${escapeHtml(p.name)}" onerror="this.onerror=null;this.src='https://placehold.co/300x300?text=Produk';">
+      <img class="product-img" src="${escapeHtml(p.imageUrl || 'https://placehold.co/300x300?text=Produk')}" alt="${escapeHtml(p.name)}" onerror="this.onerror=null;this.src='https://placehold.co/300x300?text=Produk';" loading="lazy">
       ${hasDiscount ? `<span class="product-discount-badge">${p.discountPercent}%</span>` : ''}
       <div class="product-body">
         <span class="product-location">📍 ${escapeHtml(p.location || '—')} · ${categoryIcon(p.category)} ${escapeHtml(categoryLabel(p.category))}</span>
@@ -4871,7 +4899,7 @@
     else if(p.bgColor){ wrap.style.background = p.bgColor; }
     const mediaHtml = (p.mediaType === 'video' && p.videoUrl)
       ? `<video class="portfolio-card-video" src="${escapeHtml(p.videoUrl)}" muted loop playsinline controls></video>`
-      : `<img class="portfolio-card-img" src="${escapeHtml(p.imageUrl || 'https://placehold.co/400x300?text=Proyek')}" alt="${escapeHtml(p.title)}" onerror="this.onerror=null;this.src='https://placehold.co/400x300?text=Proyek';">`;
+      : `<img class="portfolio-card-img" src="${escapeHtml(p.imageUrl || 'https://placehold.co/400x300?text=Proyek')}" alt="${escapeHtml(p.title)}" onerror="this.onerror=null;this.src='https://placehold.co/400x300?text=Proyek';" loading="lazy">`;
     wrap.innerHTML = `
       ${mediaHtml}
       <div class="portfolio-card-body">
@@ -5082,7 +5110,7 @@
     const row = document.createElement('div');
     row.className = 'pfn-service-row' + (index === pfnServicesHoverIndex ? ' active' : '');
     row.innerHTML = `
-      <button type="button" class="pfn-service-del" title="Hapus">✕</button>
+      <button type="button" class="pfn-service-del" title="Hapus" aria-label="Hapus">✕</button>
       <span class="pfn-service-num">${String(index + 1).padStart(2, '0')}</span>
       <span class="pfn-service-title editable-field">${escapeHtml(item.title)}</span>`;
     row.addEventListener('mouseenter', () => {
@@ -5165,7 +5193,7 @@
     const el = document.createElement('div');
     el.className = 'pfn-value-card';
     el.innerHTML = `
-      <button type="button" class="pfn-card-delete" title="Hapus">✕</button>
+      <button type="button" class="pfn-card-delete" title="Hapus" aria-label="Hapus">✕</button>
       <span class="pfn-value-icon editable-field">${escapeHtml(v.icon)}</span>
       <div class="pfn-value-title editable-field">${escapeHtml(v.title)}</div>
       <div class="pfn-value-desc editable-field">${escapeHtml(v.desc)}</div>`;
@@ -5203,7 +5231,7 @@
     const row = document.createElement('div');
     row.className = 'pfn-program-row' + (index === pfnProgramHoverIndex ? ' active' : '');
     row.innerHTML = `
-      <button type="button" class="pfn-program-row-del" title="Hapus">✕</button>
+      <button type="button" class="pfn-program-row-del" title="Hapus" aria-label="Hapus">✕</button>
       <span class="pfn-program-num">${String(index + 1).padStart(2, '0')}</span>
       <span class="pfn-program-row-title editable-field">${escapeHtml(p.title)}</span>`;
     row.addEventListener('mouseenter', () => {
@@ -5297,7 +5325,7 @@
       <span class="pfn-hour-day editable-field">${escapeHtml(h.day)}</span>
       <span>:</span>
       <span class="pfn-hour-time editable-field">${escapeHtml(h.time)}</span>
-      <button type="button" class="pfn-hour-del" title="Hapus">✕</button>`;
+      <button type="button" class="pfn-hour-del" title="Hapus" aria-label="Hapus">✕</button>`;
     const dayEl = row.querySelector('.pfn-hour-day');
     const timeEl = row.querySelector('.pfn-hour-time');
     dayEl.addEventListener('blur', () => { h.day = dayEl.textContent.trim() || h.day; savePortfolioPageV2Debounced(); });
@@ -5527,7 +5555,7 @@
     if(photo){
       el.style.background = 'none';
       el.textContent = '';
-      el.innerHTML = `<img src="${escapeHtml(photo)}" alt="">`;
+      el.innerHTML = `<img src="${escapeHtml(photo)}" alt="" loading="lazy">`;
     }else{
       el.innerHTML = '';
       el.style.background = user.color || colorFor(user.email);
@@ -5658,7 +5686,7 @@
     const chipMini = document.querySelector('#userChip .mini-avatar');
     if(chipMini){
       const photo = userPhotos[currentUser.email];
-      if(photo){ chipMini.style.background = 'none'; chipMini.innerHTML = `<img src="${escapeHtml(photo)}" alt="">`; }
+      if(photo){ chipMini.style.background = 'none'; chipMini.innerHTML = `<img src="${escapeHtml(photo)}" alt="" loading="lazy">`; }
       else{ chipMini.style.background = currentUser.color || colorFor(currentUser.email); chipMini.textContent = currentUser.initials || initialsOf(currentUser.name); }
     }
   }
@@ -5722,7 +5750,7 @@
       li.dataset.id = 'ws-' + crypto.randomUUID().slice(0,8);
       li.dataset.name = name.trim();
       const c = memberPalette[Math.floor(Math.random()*memberPalette.length)];
-      li.innerHTML = `<span class="ws-dot" style="background:${c}"></span><span class="ws-name editable-field">${escapeHtml(name.trim())}</span><button class="ws-delete" title="Hapus">✕</button>`;
+      li.innerHTML = `<span class="ws-dot" style="background:${c}"></span><span class="ws-name editable-field">${escapeHtml(name.trim())}</span><button class="ws-delete" title="Hapus" aria-label="Hapus">✕</button>`;
       bindWorkspaceItem(li);
       document.getElementById('workspaceList').appendChild(li);
     }
@@ -5913,7 +5941,7 @@
     const row = document.createElement('div');
     row.className = 'settings-row';
     row.dataset.rowId = id || ('custom-' + crypto.randomUUID().slice(0,8));
-    row.innerHTML = `<span class="settings-icon editable-field">${escapeHtml(icon)}</span><span class="settings-label editable-field">${escapeHtml(label)}</span><button type="button" class="settings-row-delete" title="Hapus menu">✕</button>`;
+    row.innerHTML = `<span class="settings-icon editable-field">${escapeHtml(icon)}</span><span class="settings-label editable-field">${escapeHtml(label)}</span><button type="button" class="settings-row-delete" title="Hapus menu" aria-label="Hapus menu">✕</button>`;
     wireSettingsRow(row);
     return row;
   }
@@ -6060,7 +6088,7 @@
       row.innerHTML = `
         <span class="field-row-label editable-field" data-part="label">${escapeHtml(f.label)}</span>
         <span class="field-row-value editable-field" data-part="value">${escapeHtml(f.value)}</span>
-        <button type="button" class="field-row-delete" title="Hapus elemen">✕</button>`;
+        <button type="button" class="field-row-delete" title="Hapus elemen" aria-label="Hapus elemen">✕</button>`;
       const labelEl = row.querySelector('[data-part="label"]');
       const valueEl = row.querySelector('[data-part="value"]');
       labelEl.addEventListener('blur', () => {
@@ -6115,7 +6143,7 @@
     paymentMethods.forEach(pm => {
       const row = document.createElement('div');
       row.className = 'payment-method-row';
-      const iconInner = pm.icon ? `<img src="${escapeHtml(pm.icon)}" alt="">` : escapeHtml(pm.emoji || '💳');
+      const iconInner = pm.icon ? `<img src="${escapeHtml(pm.icon)}" alt="" loading="lazy">` : escapeHtml(pm.emoji || '💳');
       const detailParts = [];
       if(pm.detail) detailParts.push(pm.detail);
       if(pm.phone) detailParts.push('📞 ' + pm.phone);
@@ -6123,18 +6151,18 @@
       row.innerHTML = `
         <div class="payment-method-icon">
           ${iconInner}
-          <button type="button" class="payment-method-icon-editbtn" title="Ganti logo cepat">📁</button>
+          <button type="button" class="payment-method-icon-editbtn" title="Ganti logo cepat" aria-label="Ganti logo cepat">📁</button>
         </div>
         <div class="payment-method-info">
           <span class="payment-method-name">${escapeHtml(pm.name)}</span>
           <span class="payment-method-detail">${escapeHtml(detailParts.join(' · '))}</span>
         </div>
-        ${pm.qrUrl ? `<img class="payment-method-qr-thumb" src="${escapeHtml(pm.qrUrl)}" alt="Kode QR" title="Lihat kode QR">` : ''}
+        ${pm.qrUrl ? `<img class="payment-method-qr-thumb" src="${escapeHtml(pm.qrUrl)}" alt="Kode QR" title="Lihat kode QR" loading="lazy">` : ''}
         <label class="toggle-switch" title="Aktif/nonaktif">
           <input type="checkbox" ${pm.enabled ? 'checked' : ''}>
           <span class="toggle-switch-track"></span>
         </label>
-        <button type="button" class="field-row-delete" title="Edit / hapus" style="display:flex;">✎</button>`;
+        <button type="button" class="field-row-delete" title="Edit / hapus" style="display:flex;" aria-label="Edit / hapus">✎</button>`;
       row.querySelector('.toggle-switch input').addEventListener('change', (e) => {
         pm.enabled = e.target.checked;
         savePaymentMethods();
@@ -6591,7 +6619,9 @@
 
   // ---------- Logout ----------
   document.getElementById('logoutBtn').addEventListener('click', () => {
+    if(sessionToken){ apiPost('logout', {}).catch(()=>{}); }
     currentUser = null;
+    sessionToken = null;
     if(portfolioAutoRefreshTimer){ clearInterval(portfolioAutoRefreshTimer); portfolioAutoRefreshTimer = null; }
     document.body.classList.remove('is-admin');
     switchView('portfolio');
@@ -6706,7 +6736,7 @@
     btn.disabled = true; btn.textContent = 'Memproses…';
     try{
       const result = await apiPost('login', { email, password });
-      if(result.ok) await afterAuthSuccess(result.user);
+      if(result.ok){ sessionToken = result.sessionToken || null; await afterAuthSuccess(result.user); }
       else showAuthError('loginError', result.error || 'Login gagal.');
     }catch(err){
       showAuthError('loginError', 'Tidak bisa menghubungi database. Cek CONFIG.SCRIPT_URL.');
@@ -6723,7 +6753,7 @@
     const pw = document.getElementById('regPassword').value;
     const pw2 = document.getElementById('regPasswordConfirm').value;
     if(!/^[^\s@]+@gmail\.com$/i.test(email)){ showAuthError('regError','Gunakan alamat Gmail yang valid.'); return; }
-    if(pw.length < 6){ showAuthError('regError','Kata sandi minimal 6 karakter.'); return; }
+    if(pw.length < 8){ showAuthError('regError','Kata sandi minimal 8 karakter.'); return; }
     if(pw !== pw2){ showAuthError('regError','Konfirmasi kata sandi tidak cocok.'); return; }
     if(!requireScriptUrl('regError')) return;
     const btn = document.getElementById('regSubmit');
@@ -6739,9 +6769,34 @@
     btn.disabled = false; btn.textContent = 'Kirim kode OTP';
   });
 
-  document.getElementById('regOtpResend').addEventListener('click', async () => {
+  // Cooldown generik untuk tombol "Kirim ulang kode" agar tidak memicu spam email
+  // (server juga membatasi ini, tapi cooldown di sisi tampilan memberi feedback langsung).
+  function startResendCooldown(btn, seconds){
+    const originalText = btn.dataset.originalText || btn.textContent;
+    btn.dataset.originalText = originalText;
+    btn.disabled = true;
+    let remaining = seconds;
+    btn.textContent = `Kirim ulang kode (${remaining}s)`;
+    const timer = setInterval(() => {
+      remaining -= 1;
+      if(remaining <= 0){
+        clearInterval(timer);
+        btn.disabled = false;
+        btn.textContent = originalText;
+      } else {
+        btn.textContent = `Kirim ulang kode (${remaining}s)`;
+      }
+    }, 1000);
+  }
+
+  document.getElementById('regOtpResend').addEventListener('click', async (evt) => {
     hideAuthError('regOtpError');
-    try{ const r = await apiPost('send_signup_otp', { email: pendingRegEmail }); if(!r.ok) showAuthError('regOtpError', r.error); }
+    const btn = evt.currentTarget;
+    try{
+      const r = await apiPost('send_signup_otp', { email: pendingRegEmail });
+      if(!r.ok) showAuthError('regOtpError', r.error);
+      else startResendCooldown(btn, 45);
+    }
     catch(err){ showAuthError('regOtpError', 'Tidak bisa menghubungi database.'); }
   });
 
@@ -6753,7 +6808,7 @@
     btn.disabled = true; btn.textContent = 'Memverifikasi…';
     try{
       const result = await apiPost('complete_signup', { email: pendingRegEmail, code, name: pendingRegName, password: pendingRegPassword });
-      if(result.ok) await afterAuthSuccess(result.user);
+      if(result.ok){ sessionToken = result.sessionToken || null; await afterAuthSuccess(result.user); }
       else showAuthError('regOtpError', result.error || 'Verifikasi gagal.');
     }catch(err){ showAuthError('regOtpError', 'Tidak bisa menghubungi database.'); }
     btn.disabled = false; btn.textContent = 'Verifikasi & Daftar';
@@ -6779,9 +6834,14 @@
     btn.disabled = false; btn.textContent = 'Kirim kode reset';
   });
 
-  document.getElementById('forgotOtpResend').addEventListener('click', async () => {
+  document.getElementById('forgotOtpResend').addEventListener('click', async (evt) => {
     hideAuthError('forgotOtpError');
-    try{ const r = await apiPost('request_password_reset', { email: pendingResetEmail }); if(!r.ok) showAuthError('forgotOtpError', r.error); }
+    const btn = evt.currentTarget;
+    try{
+      const r = await apiPost('request_password_reset', { email: pendingResetEmail });
+      if(!r.ok) showAuthError('forgotOtpError', r.error);
+      else startResendCooldown(btn, 45);
+    }
     catch(err){ showAuthError('forgotOtpError', 'Tidak bisa menghubungi database.'); }
   });
 
@@ -6790,7 +6850,7 @@
     const code = document.getElementById('forgotOtpCode').value.trim();
     const newPassword = document.getElementById('forgotNewPassword').value;
     if(!/^\d{6}$/.test(code)){ showAuthError('forgotOtpError','Kode OTP harus 6 digit angka.'); return; }
-    if(newPassword.length < 6){ showAuthError('forgotOtpError','Kata sandi minimal 6 karakter.'); return; }
+    if(newPassword.length < 8){ showAuthError('forgotOtpError','Kata sandi minimal 8 karakter.'); return; }
     const btn = document.getElementById('forgotOtpSubmit');
     btn.disabled = true; btn.textContent = 'Menyimpan…';
     try{
