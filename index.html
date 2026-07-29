@@ -35,6 +35,14 @@
     --accent-amber-dark:#a06c28;
     --accent-clay:#b65c4a;
     --accent-moss:#6b7d4f;
+    /* Warna kartu ringkasan Inventaris — bisa diubah admin lewat JS (lihat
+       applyInventoryCardColors()), defaultnya sama dengan warna tema. */
+    --inv-card1:#2f6e73;
+    --inv-card1-dark:#204d51;
+    --inv-card2:#c98a3d;
+    --inv-card2-dark:#a06c28;
+    --inv-warn:#b65c4a;
+    --inv-ok:#6b7d4f;
     --white:#fffdf7;
     font-size:16px;
   }
@@ -853,8 +861,8 @@
   .inv-stat-card{ position:relative; overflow:hidden; border-radius:16px; padding:20px 20px 18px; color:var(--white); min-height:112px; display:flex; flex-direction:column; justify-content:space-between; }
   .inv-stat-card::after{ content:''; position:absolute; width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,0.14); top:-50px; right:-40px; pointer-events:none; }
   .inv-stat-card::before{ content:''; position:absolute; width:70px; height:70px; border-radius:50%; background:rgba(255,255,255,0.10); bottom:-30px; right:30px; pointer-events:none; }
-  .inv-stat-card.tone-teal{ background:linear-gradient(135deg, var(--accent-teal), var(--accent-teal-dark)); }
-  .inv-stat-card.tone-amber{ background:linear-gradient(135deg, var(--accent-amber), var(--accent-amber-dark)); }
+  .inv-stat-card.tone-teal{ background:linear-gradient(135deg, var(--inv-card1), var(--inv-card1-dark)); }
+  .inv-stat-card.tone-amber{ background:linear-gradient(135deg, var(--inv-card2), var(--inv-card2-dark)); }
   .inv-stat-card .inv-stat-icon{ width:34px; height:34px; border-radius:9px; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:1rem; }
   .inv-stat-card .inv-stat-value{ font-family:'Fraunces', serif; font-size:1.9rem; font-weight:600; line-height:1; margin-top:10px; position:relative; z-index:1; }
   .inv-stat-card .inv-stat-label{ font-size:0.76rem; opacity:0.9; margin-top:4px; position:relative; z-index:1; }
@@ -862,8 +870,8 @@
   .inv-stat-stack{ display:flex; flex-direction:column; gap:16px; }
   .inv-stat-mini{ flex:1; display:flex; align-items:center; gap:12px; border-radius:14px; padding:14px 16px; background:var(--paper-card); border:1px solid var(--line); }
   .inv-stat-mini .inv-stat-icon{ width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:0.95rem; flex-shrink:0; color:var(--white); }
-  .inv-stat-mini.warn .inv-stat-icon{ background:var(--accent-clay); }
-  .inv-stat-mini.ok .inv-stat-icon{ background:var(--accent-moss); }
+  .inv-stat-mini.warn .inv-stat-icon{ background:var(--inv-warn); }
+  .inv-stat-mini.ok .inv-stat-icon{ background:var(--inv-ok); }
   .inv-stat-mini .inv-stat-value{ font-family:'Fraunces', serif; font-size:1.15rem; font-weight:600; line-height:1.1; }
   .inv-stat-mini .inv-stat-label{ font-size:0.68rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.03em; font-family:'IBM Plex Mono', monospace; }
 
@@ -1130,72 +1138,6 @@
   .rt-toolbar button:hover{ border-color:var(--accent-teal); color:var(--accent-teal); }
   .rt-toolbar button.active{ background:var(--accent-clay); border-color:var(--accent-clay); color:var(--white); }
   .rt-toolbar .rt-sep{ width:1px; align-self:stretch; background:#46433c; margin:2px 2px; }
-
-  /* ---------- Popover warna elemen (klik kanan saat Mode Edit) ----------
-     Berbeda dari .rt-toolbar (yang hanya untuk gaya teks field portofolio), popover ini
-     bisa dipakai pada ELEMEN APA PUN di dasbor untuk mengatur warna latar & warna teksnya.
-     Style di bawah ini dipakai bersama dengan .pfn-service-menu (menu pengaturan tiap
-     Layanan: font, warna, & tautan kategori produk) supaya tampilannya konsisten. */
-  .color-popover, .pfn-service-menu{
-    display:none; position:fixed; z-index:600; flex-direction:column; gap:10px;
-    background:var(--ink-dark); border:1px solid var(--ink-dark-2); border-radius:9px;
-    padding:14px 16px 12px; box-shadow:0 12px 30px rgba(20,19,17,0.42); min-width:210px;
-  }
-  .color-popover.open, .pfn-service-menu.open{ display:flex; }
-  .color-popover .cp-title, .pfn-service-menu .cp-title{
-    font-family:'IBM Plex Mono', monospace; font-size:0.66rem; text-transform:uppercase;
-    letter-spacing:0.05em; color:var(--paper); opacity:0.65; margin:0 18px 2px 0;
-  }
-  .color-popover .cp-row, .pfn-service-menu .cp-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-  .color-popover .cp-row label, .pfn-service-menu .cp-row label{ font-family:'IBM Plex Sans', sans-serif; font-size:0.8rem; color:var(--paper); }
-  .color-popover .cp-swatch-wrap, .pfn-service-menu .cp-swatch-wrap{ display:flex; align-items:center; gap:6px; }
-  .color-popover input[type="color"], .pfn-service-menu input[type="color"]{
-    width:34px; height:28px; padding:2px; border:1px solid #46433c; border-radius:5px;
-    cursor:pointer; background:var(--ink-dark-2);
-  }
-  .pfn-service-menu select{
-    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; background:var(--ink-dark-2);
-    color:var(--paper); border:1px solid #46433c; border-radius:5px; padding:6px 7px; cursor:pointer;
-    max-width:150px;
-  }
-  .color-popover .cp-clear, .pfn-service-menu .cp-clear{
-    width:22px; height:22px; border-radius:50%; border:1px solid #46433c; background:var(--ink-dark-2);
-    color:var(--paper); font-size:0.65rem; line-height:1; cursor:pointer; display:flex;
-    align-items:center; justify-content:center; opacity:0.75;
-  }
-  .color-popover .cp-clear:hover, .pfn-service-menu .cp-clear:hover{ opacity:1; border-color:var(--accent-clay); color:var(--accent-clay); }
-  .color-popover .cp-actions, .pfn-service-menu .cp-actions{ display:flex; gap:8px; margin-top:2px; }
-  .color-popover .cp-actions button, .pfn-service-menu .cp-actions button{
-    flex:1; font-family:'IBM Plex Mono', monospace; font-size:0.68rem; padding:8px 8px;
-    border-radius:5px; border:1px solid #46433c; background:var(--ink-dark-2); color:var(--paper);
-    cursor:pointer;
-  }
-  .color-popover .cp-actions button:hover, .pfn-service-menu .cp-actions button:hover{ border-color:var(--accent-teal); color:var(--accent-teal); }
-  .color-popover .cp-close, .pfn-service-menu .cp-close{
-    position:absolute; top:8px; right:10px; background:none; border:none; color:var(--paper);
-    opacity:0.55; cursor:pointer; font-size:0.9rem; line-height:1; padding:2px;
-  }
-  .color-popover .cp-close:hover, .pfn-service-menu .cp-close:hover{ opacity:1; }
-  .color-popover .cp-hint, .pfn-service-menu .cp-hint{ font-size:0.68rem; color:var(--paper); opacity:0.55; line-height:1.4; margin:0; }
-  .pfn-service-menu .cp-count{ font-size:0.72rem; color:var(--accent-amber); font-family:'IBM Plex Mono', monospace; margin:0; }
-  body.edit-mode .color-target-hover{
-    outline:1px dashed var(--accent-teal) !important;
-    outline-offset:2px;
-  }
-
-  /* Tombol "⚙" pengaturan tiap baris Layanan (font, warna, kategori produk) &
-     lencana jumlah produk yang muncul otomatis saat Layanan ditautkan ke kategori. */
-  .pfn-service-menu-btn{
-    display:none; position:absolute; top:26px; right:-8px; width:20px; height:20px; border-radius:50%;
-    background:var(--ink-mid); color:var(--white); border:none; font-size:0.62rem; cursor:pointer;
-    align-items:center; justify-content:center;
-  }
-  body.edit-mode .pfn-service-menu-btn{ display:flex; }
-  .pfn-service-menu-btn:hover{ background:var(--accent-teal-dark); }
-  .pfn-service-count{
-    font-family:'IBM Plex Mono', monospace; font-size:0.66rem; color:var(--ink-soft);
-    align-self:center;
-  }
 
   /* Kartu Profil (menu Pengaturan > Profil) */
   .profile-card{
@@ -2124,9 +2066,12 @@
     <!-- VIEW: INVENTARIS (khusus admin) -->
     <section class="view" id="viewInventory">
       <div class="inv-wrap">
-        <div class="inv-header">
-          <h2>Inventaris Produk</h2>
-          <p>Pantau stok fisik di gudang dan catat setiap penambahan/pengurangan. Hanya admin yang bisa mengubah data ini.</p>
+        <div class="inv-header" style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div>
+            <h2>Inventaris Produk</h2>
+            <p>Pantau stok fisik di gudang dan catat setiap penambahan/pengurangan. Hanya admin yang bisa mengubah data ini.</p>
+          </div>
+          <button type="button" class="btn-ghost" id="invColorSettingsBtn" style="flex-shrink:0;">🎨 Atur Warna Kartu</button>
         </div>
 
         <div class="inv-summary-row" id="invSummaryRow"></div>
@@ -2611,68 +2556,6 @@
   <button type="button" id="rtReset" title="Hapus semua format" aria-label="Hapus semua format">Reset</button>
 </div>
 
-<!-- POPOVER WARNA ELEMEN (mengambang, admin only, muncul saat klik kanan elemen apa pun di Mode Edit) -->
-<div class="color-popover" id="colorPopover">
-  <button type="button" class="cp-close" id="cpClose" title="Tutup" aria-label="Tutup">✕</button>
-  <p class="cp-title" id="cpTitle">Warna elemen</p>
-  <div class="cp-row">
-    <label for="cpBg">Warna latar</label>
-    <div class="cp-swatch-wrap">
-      <button type="button" class="cp-clear" id="cpBgClear" title="Hapus warna latar" aria-label="Hapus warna latar">↺</button>
-      <input type="color" id="cpBg" value="#efe9dc">
-    </div>
-  </div>
-  <div class="cp-row">
-    <label for="cpText">Warna teks</label>
-    <div class="cp-swatch-wrap">
-      <button type="button" class="cp-clear" id="cpTextClear" title="Hapus warna teks" aria-label="Hapus warna teks">↺</button>
-      <input type="color" id="cpText" value="#201f1d">
-    </div>
-  </div>
-  <div class="cp-row">
-    <label for="cpBorder">Warna garis tepi</label>
-    <div class="cp-swatch-wrap">
-      <button type="button" class="cp-clear" id="cpBorderClear" title="Hapus warna garis tepi" aria-label="Hapus warna garis tepi">↺</button>
-      <input type="color" id="cpBorder" value="#c4b99a">
-    </div>
-  </div>
-  <div class="cp-actions">
-    <button type="button" id="cpResetAll">Reset semua</button>
-  </div>
-  <p class="cp-hint">Klik kanan pada elemen lain untuk mengubah warnanya juga.</p>
-</div>
-
-<!-- POPOVER PENGATURAN LAYANAN (font, warna & tautan kategori produk per item "Layanan Kami") -->
-<div class="pfn-service-menu" id="pfnServiceMenu">
-  <button type="button" class="cp-close" id="svcMenuClose" title="Tutup" aria-label="Tutup">✕</button>
-  <p class="cp-title">Pengaturan layanan</p>
-  <div class="cp-row">
-    <label for="svcMenuFont">Jenis tulisan</label>
-    <select id="svcMenuFont">
-      <option value="">Font bawaan</option>
-      <option value="'Fraunces', serif">Fraunces (serif)</option>
-      <option value="'IBM Plex Sans', sans-serif">IBM Plex Sans</option>
-      <option value="'IBM Plex Mono', monospace">IBM Plex Mono</option>
-      <option value="Georgia, serif">Georgia</option>
-      <option value="Arial, Helvetica, sans-serif">Arial</option>
-      <option value="'Times New Roman', serif">Times New Roman</option>
-      <option value="'Courier New', monospace">Courier New</option>
-    </select>
-  </div>
-  <div class="cp-row">
-    <label for="svcMenuColor">Warna tulisan</label>
-    <div class="cp-swatch-wrap">
-      <button type="button" class="cp-clear" id="svcMenuColorClear" title="Pakai warna bawaan" aria-label="Pakai warna bawaan">↺</button>
-      <input type="color" id="svcMenuColor" value="#201f1d">
-    </div>
-  </div>
-  <div class="cp-row">
-    <label for="svcMenuCategory">Kategori produk</label>
-    <select id="svcMenuCategory"></select>
-  </div>
-  <p class="cp-count" id="svcMenuCount">Pilih kategori untuk menampilkan jumlah produk</p>
-</div>
-
 <!-- MODAL PENGATURAN FOTO PROFIL (avatar topbar) -->
 <div class="modal-overlay" id="userPhotoOverlay">
   <div class="modal">
@@ -2847,6 +2730,40 @@
     <div class="modal-actions">
       <button class="btn-ghost" id="productCancel">Batal</button>
       <button class="btn-primary" id="productSave">Simpan produk</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL WARNA KARTU INVENTARIS (ADMIN) -->
+<div class="modal-overlay" id="invColorOverlay">
+  <div class="modal">
+    <h3>Atur warna kartu ringkasan Inventaris</h3>
+    <p style="font-size:0.78rem; color:var(--ink-soft); margin:-6px 0 4px;">Pilih warna sesukamu untuk tiap kartu ringkasan di halaman Inventaris. Perubahan berlaku untuk semua yang login.</p>
+    <label for="invColorCard1">Kartu "Total Produk"</label>
+    <div class="modal-color-row">
+      <input type="color" id="invColorCard1" value="#2f6e73">
+      <span class="color-hint">Warna dasar kartu (gradasinya dibuat otomatis)</span>
+    </div>
+    <label for="invColorCard2" style="margin-top:14px;">Kartu "Total Unit di Gudang"</label>
+    <div class="modal-color-row">
+      <input type="color" id="invColorCard2" value="#c98a3d">
+      <span class="color-hint">Warna dasar kartu (gradasinya dibuat otomatis)</span>
+    </div>
+    <label for="invColorWarn" style="margin-top:14px;">Ikon "Stok Menipis / Stok Habis"</label>
+    <div class="modal-color-row">
+      <input type="color" id="invColorWarn" value="#b65c4a">
+      <span class="color-hint">Dipakai saat ada stok yang perlu perhatian</span>
+    </div>
+    <label for="invColorOk" style="margin-top:14px;">Ikon "Aman" (stok habis = 0)</label>
+    <div class="modal-color-row">
+      <input type="color" id="invColorOk" value="#6b7d4f">
+      <span class="color-hint">Dipakai saat tidak ada produk yang stoknya habis</span>
+    </div>
+    <p class="modal-error" id="invColorError"></p>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="invColorReset">↺ Kembalikan default</button>
+      <button class="btn-ghost" id="invColorCancel">Batal</button>
+      <button class="btn-primary" id="invColorSave">Simpan warna</button>
     </div>
   </div>
 </div>
@@ -4430,8 +4347,81 @@
   let inventoryLogs = [];
   let invActiveCategory = 'all';
 
+  const INV_DEFAULT_COLORS = { card1:'#2f6e73', card2:'#c98a3d', warn:'#b65c4a', ok:'#6b7d4f' };
+
+  // Menggelapkan warna hex sebesar `percent` (0–100) — dipakai untuk membuat
+  // gradasi kartu dari satu warna yang dipilih admin, tanpa perlu 2 color-picker.
+  function shadeColor(hex, percent){
+    hex = (hex || '').replace('#','');
+    if(hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const num = parseInt(hex, 16);
+    if(isNaN(num)) return hex ? ('#' + hex) : '#000000';
+    let r = (num >> 16) & 255, g = (num >> 8) & 255, b = num & 255;
+    r = Math.max(0, Math.round(r * (1 - percent / 100)));
+    g = Math.max(0, Math.round(g * (1 - percent / 100)));
+    b = Math.max(0, Math.round(b * (1 - percent / 100)));
+    return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+  }
+
+  function getInventoryCardColors(){
+    const saved = remoteSettings.inventoryCardColors;
+    return Object.assign({}, INV_DEFAULT_COLORS, saved && typeof saved === 'object' ? saved : {});
+  }
+
+  // Menerapkan warna kartu ringkasan Inventaris ke variabel CSS global,
+  // supaya kartu langsung berubah tanpa perlu render ulang HTML-nya.
+  function applyInventoryCardColors(){
+    const c = getInventoryCardColors();
+    const root = document.documentElement.style;
+    root.setProperty('--inv-card1', c.card1);
+    root.setProperty('--inv-card1-dark', shadeColor(c.card1, 25));
+    root.setProperty('--inv-card2', c.card2);
+    root.setProperty('--inv-card2-dark', shadeColor(c.card2, 25));
+    root.setProperty('--inv-warn', c.warn);
+    root.setProperty('--inv-ok', c.ok);
+  }
+
+  function openInventoryColorModal(){
+    const c = getInventoryCardColors();
+    document.getElementById('invColorCard1').value = c.card1;
+    document.getElementById('invColorCard2').value = c.card2;
+    document.getElementById('invColorWarn').value = c.warn;
+    document.getElementById('invColorOk').value = c.ok;
+    document.getElementById('invColorError').textContent = '';
+    document.getElementById('invColorOverlay').classList.add('open');
+  }
+
+  document.getElementById('invColorSettingsBtn').addEventListener('click', openInventoryColorModal);
+  document.getElementById('invColorCancel').addEventListener('click', () => document.getElementById('invColorOverlay').classList.remove('open'));
+  document.getElementById('invColorOverlay').addEventListener('click', (e) => { if(e.target.id === 'invColorOverlay') e.target.classList.remove('open'); });
+
+  document.getElementById('invColorReset').addEventListener('click', () => {
+    document.getElementById('invColorCard1').value = INV_DEFAULT_COLORS.card1;
+    document.getElementById('invColorCard2').value = INV_DEFAULT_COLORS.card2;
+    document.getElementById('invColorWarn').value = INV_DEFAULT_COLORS.warn;
+    document.getElementById('invColorOk').value = INV_DEFAULT_COLORS.ok;
+  });
+
+  document.getElementById('invColorSave').addEventListener('click', () => {
+    if(!currentUser || currentUser.role !== 'admin'){
+      document.getElementById('invColorError').textContent = 'Hanya admin yang bisa mengubah warna ini.';
+      return;
+    }
+    const colors = {
+      card1: document.getElementById('invColorCard1').value,
+      card2: document.getElementById('invColorCard2').value,
+      warn: document.getElementById('invColorWarn').value,
+      ok: document.getElementById('invColorOk').value
+    };
+    persistSetting('inventoryCardColors', colors);
+    applyInventoryCardColors();
+    renderInventorySummary();
+    document.getElementById('invColorOverlay').classList.remove('open');
+  });
+
   async function loadInventoryView(){
     if(!currentUser || currentUser.role !== 'admin') return;
+    applyInventoryCardColors();
     // Ambil produk terbaru (kalau belum ada) dan riwayat inventaris dari server.
     try{
       if(!products.length) await loadProductsFromSheet();
@@ -4990,145 +4980,6 @@
   });
   genericStyleObserver.observe(document.body, { childList:true, subtree:true });
   document.querySelectorAll('.editable-field').forEach(applyStyleToEditableField);
-
-  // ---------- Warna elemen (klik kanan, berlaku untuk SEMUA elemen di dasbor) ----------
-  // Tidak seperti toolbar teks di atas (yang hanya untuk field portofolio & elemen bertanda
-  // .editable-field), fitur ini memberi admin kemampuan mengatur warna latar, warna teks, dan
-  // warna garis tepi pada elemen APA PUN — kartu, kolom, tombol, sidebar, dsb — lewat klik kanan
-  // saat Mode Edit aktif. Setiap elemen diberi "kunci" yang stabil (berdasarkan id/data-id yang
-  // sudah ada, atau posisi di dalam struktur halaman) supaya warnanya tetap tersimpan & muncul
-  // kembali setelah halaman dimuat ulang, lalu disinkronkan ke database seperti pengaturan lain.
-  let elementColors = {};
-  function loadElementColors(){
-    elementColors = loadSyncedSetting('elementColors', x => x && typeof x === 'object') || {};
-  }
-  function saveElementColors(){ persistSetting('elementColors', elementColors); }
-  loadElementColors();
-  applyAllElementColors();
-
-  // Elemen yang TIDAK boleh diwarnai lewat fitur ini (area login/OTP terpisah dari dasbor,
-  // dan kolom input/textarea yang perlu klik kanan bawaan browser untuk copy-paste, dsb).
-  const COLOR_SKIP_SELECTOR = '.auth-screen, .auth-screen *, input, textarea, select, .color-popover, .color-popover *, .rt-toolbar, .rt-toolbar *, .pfn-service-menu, .pfn-service-menu *';
-
-  // Menghitung kunci berbasis posisi DOM untuk elemen statis yang tidak punya id/data-id.
-  // Stabil selama struktur HTML tidak berubah (cocok untuk elemen tetap dasbor: sidebar,
-  // topbar, tombol, header kolom, dsb — bukan untuk item daftar dinamis, yang sudah ditangani
-  // lewat kunci id/data-id/data-row-id di styleKeyFor di atas).
-  function domPathKey(el){
-    const parts = [];
-    let cur = el;
-    while(cur && cur !== document.body && cur.parentElement){
-      const parent = cur.parentElement;
-      const sameTag = Array.from(parent.children).filter(c => c.tagName === cur.tagName);
-      const idx = sameTag.indexOf(cur) + 1;
-      parts.unshift(cur.tagName.toLowerCase() + ':nth-of-type(' + idx + ')');
-      cur = parent;
-    }
-    return 'path:' + parts.join('>');
-  }
-  function resolveDomPathKey(key){
-    if(!key || key.indexOf('path:') !== 0) return null;
-    const sel = key.slice('path:'.length);
-    if(!sel) return null;
-    try{ return document.body.querySelector(':scope > ' + sel); }catch(err){ return null; }
-  }
-  // Kunci warna elemen memakai kunci gaya teks yang sama (id / anc:data-id / nav:view) bila
-  // tersedia, supaya konsisten dengan sistem gaya teks yang sudah ada; kalau tidak ada, jatuh
-  // kembali ke kunci berbasis posisi DOM di atas.
-  function colorKeyFor(el){
-    const existing = styleKeyFor(el);
-    if(existing) return existing;
-    el.dataset.styleKey = domPathKey(el);
-    return el.dataset.styleKey;
-  }
-
-  function applyElementColor(el, style){
-    if(!el) return;
-    style = style || {};
-    el.style.backgroundColor = style.bg || '';
-    el.style.color = style.text || '';
-    if(style.border){ el.style.borderColor = style.border; el.style.borderStyle = el.style.borderStyle || 'solid'; el.style.borderWidth = el.style.borderWidth || '1px'; }
-    else el.style.borderColor = '';
-  }
-  function applyAllElementColors(){
-    Object.keys(elementColors).forEach(key => {
-      let el = null;
-      if(key.indexOf('path:') === 0) el = resolveDomPathKey(key);
-      else if(key.indexOf('id:') === 0) el = document.getElementById(key.slice(3));
-      else if(key.indexOf('nav:') === 0) el = document.querySelector('.nav-tab[data-view="' + key.slice(4) + '"]');
-      // Kunci "anc:" (item daftar dinamis) diterapkan sendiri oleh masing-masing fungsi render.
-      if(el) applyElementColor(el, elementColors[key]);
-    });
-  }
-
-  let cpTargetEl = null, cpTargetKey = null;
-  const colorPopover = document.getElementById('colorPopover');
-  function closeColorPopover(){
-    colorPopover.classList.remove('open');
-    cpTargetEl = null; cpTargetKey = null;
-  }
-  function positionColorPopover(x, y){
-    colorPopover.style.display = 'flex';
-    const w = colorPopover.offsetWidth || 220, h = colorPopover.offsetHeight || 200;
-    let left = Math.min(x, window.innerWidth - w - 12);
-    let top = Math.min(y, window.innerHeight - h - 12);
-    colorPopover.style.left = Math.max(10, left) + 'px';
-    colorPopover.style.top = Math.max(10, top) + 'px';
-    colorPopover.style.display = '';
-  }
-  function openColorPopover(el, x, y){
-    cpTargetEl = el;
-    cpTargetKey = colorKeyFor(el);
-    if(!elementColors[cpTargetKey]) elementColors[cpTargetKey] = {};
-    const style = elementColors[cpTargetKey];
-    document.getElementById('cpBg').value = style.bg || '#efe9dc';
-    document.getElementById('cpText').value = style.text || '#201f1d';
-    document.getElementById('cpBorder').value = style.border || '#c4b99a';
-    const label = el.className && typeof el.className === 'string' && el.className.split(' ')[0]
-      ? el.className.split(' ')[0] : el.tagName.toLowerCase();
-    document.getElementById('cpTitle').textContent = 'Warna elemen · ' + label;
-    colorPopover.classList.add('open');
-    positionColorPopover(x, y);
-  }
-  const cpSaveDebounced = debounce(() => saveElementColors(), 500);
-  function cpUpdate(field, value){
-    if(!cpTargetKey) return;
-    if(!elementColors[cpTargetKey]) elementColors[cpTargetKey] = {};
-    if(value) elementColors[cpTargetKey][field] = value;
-    else delete elementColors[cpTargetKey][field];
-    applyElementColor(cpTargetEl, elementColors[cpTargetKey]);
-    cpSaveDebounced();
-  }
-  document.getElementById('cpBg').addEventListener('input', e => cpUpdate('bg', e.target.value));
-  document.getElementById('cpText').addEventListener('input', e => cpUpdate('text', e.target.value));
-  document.getElementById('cpBorder').addEventListener('input', e => cpUpdate('border', e.target.value));
-  document.getElementById('cpBgClear').addEventListener('click', () => { cpUpdate('bg', ''); document.getElementById('cpBg').value = '#efe9dc'; });
-  document.getElementById('cpTextClear').addEventListener('click', () => { cpUpdate('text', ''); document.getElementById('cpText').value = '#201f1d'; });
-  document.getElementById('cpBorderClear').addEventListener('click', () => { cpUpdate('border', ''); document.getElementById('cpBorder').value = '#c4b99a'; });
-  document.getElementById('cpResetAll').addEventListener('click', () => {
-    if(!cpTargetKey) return;
-    elementColors[cpTargetKey] = {};
-    applyElementColor(cpTargetEl, {});
-    document.getElementById('cpBg').value = '#efe9dc';
-    document.getElementById('cpText').value = '#201f1d';
-    document.getElementById('cpBorder').value = '#c4b99a';
-    saveElementColors();
-  });
-  document.getElementById('cpClose').addEventListener('click', closeColorPopover);
-  document.addEventListener('mousedown', (e) => {
-    if(colorPopover.classList.contains('open') && !colorPopover.contains(e.target)) closeColorPopover();
-  });
-
-  // Klik kanan pada elemen apa pun di dasbor (saat Mode Edit + admin) membuka popover warna,
-  // menggantikan menu klik-kanan bawaan browser di area tersebut.
-  document.addEventListener('contextmenu', (e) => {
-    if(!editMode || !currentUser || currentUser.role !== 'admin') return;
-    if(e.target.closest(COLOR_SKIP_SELECTOR)) return;
-    const el = e.target.closest('.main *, .main');
-    if(!el || el === document.body) return;
-    e.preventDefault();
-    openColorPopover(el, e.clientX, e.clientY);
-  });
 
   // ---------- Portofolio ----------
   function renderPortfolioProfile(){
@@ -5793,14 +5644,10 @@
   function buildPfnServiceRow(item, index){
     const row = document.createElement('div');
     row.className = 'pfn-service-row' + (index === pfnServicesHoverIndex ? ' active' : '');
-    row.dataset.serviceId = item.id;
-    const titleStyle = (item.fontFamily ? 'font-family:' + item.fontFamily + ';' : '') + (item.color ? 'color:' + item.color + ';' : '');
     row.innerHTML = `
       <button type="button" class="pfn-service-del" title="Hapus" aria-label="Hapus">✕</button>
-      <button type="button" class="pfn-service-menu-btn" title="Jenis tulisan, warna & kategori produk" aria-label="Pengaturan layanan">⚙</button>
       <span class="pfn-service-num">${String(index + 1).padStart(2, '0')}</span>
-      <span class="pfn-service-title editable-field" style="${titleStyle}">${escapeHtml(item.title)}</span>
-      ${item.categoryId ? `<span class="pfn-service-count">${productCountForCategory(item.categoryId)} Produk</span>` : ''}`;
+      <span class="pfn-service-title editable-field">${escapeHtml(item.title)}</span>`;
     row.addEventListener('mouseenter', () => {
       pfnServicesHoverIndex = index;
       updatePfnServicesActiveState();
@@ -5821,10 +5668,6 @@
       if(pfnServicesHoverIndex >= portfolioPageV2.services.length) pfnServicesHoverIndex = 0;
       renderPfnServices();
       savePortfolioPageV2();
-    });
-    row.querySelector('.pfn-service-menu-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      openPfnServiceMenu(item, e.currentTarget);
     });
     return row;
   }
@@ -5850,100 +5693,6 @@
     renderPfnServicesImages();
     applyEditableState();
   }
-
-  // Jumlah produk yang tergolong dalam satu kategori produk (dipakai untuk lencana "N Produk"
-  // saat sebuah Layanan ditautkan ke kategori tertentu lewat menu pengaturan layanan).
-  function productCountForCategory(catId){
-    if(!catId) return 0;
-    return products.filter(p => p.category === catId).length;
-  }
-
-  // Menerapkan perubahan font/warna/kategori langsung ke baris Layanan yang sedang dibuka,
-  // tanpa perlu me-render ulang seluruh daftar (supaya hover/scroll tidak terganggu).
-  function applyServiceItemLive(item){
-    const row = document.querySelector('#pfnServicesList .pfn-service-row[data-service-id="' + item.id + '"]');
-    if(!row) return;
-    const titleEl = row.querySelector('.pfn-service-title');
-    if(titleEl){
-      titleEl.style.fontFamily = item.fontFamily || '';
-      titleEl.style.color = item.color || '';
-    }
-    let badge = row.querySelector('.pfn-service-count');
-    if(item.categoryId){
-      if(!badge){ badge = document.createElement('span'); badge.className = 'pfn-service-count'; row.appendChild(badge); }
-      badge.textContent = productCountForCategory(item.categoryId) + ' Produk';
-    } else if(badge){ badge.remove(); }
-  }
-
-  // ---- Popover pengaturan Layanan (font, warna, tautan kategori produk) ----
-  let pfnSvcMenuItem = null;
-  const pfnServiceMenu = document.getElementById('pfnServiceMenu');
-  function closePfnServiceMenu(){
-    pfnServiceMenu.classList.remove('open');
-    pfnSvcMenuItem = null;
-  }
-  function positionPfnServiceMenu(anchorEl){
-    const rect = anchorEl.getBoundingClientRect();
-    pfnServiceMenu.style.display = 'flex';
-    const w = pfnServiceMenu.offsetWidth || 230, h = pfnServiceMenu.offsetHeight || 200;
-    let left = Math.min(rect.right + 10, window.innerWidth - w - 12);
-    let top = Math.min(rect.top, window.innerHeight - h - 12);
-    pfnServiceMenu.style.left = Math.max(10, left) + 'px';
-    pfnServiceMenu.style.top = Math.max(10, top) + 'px';
-    pfnServiceMenu.style.display = '';
-  }
-  function updateSvcMenuCount(){
-    const catId = document.getElementById('svcMenuCategory').value;
-    const countEl = document.getElementById('svcMenuCount');
-    countEl.textContent = catId
-      ? (productCountForCategory(catId) + ' produk di kategori ini')
-      : 'Pilih kategori untuk menampilkan jumlah produk';
-  }
-  function openPfnServiceMenu(item, anchorEl){
-    pfnSvcMenuItem = item;
-    document.getElementById('svcMenuFont').value = item.fontFamily || '';
-    document.getElementById('svcMenuColor').value = item.color || '#201f1d';
-    const catSel = document.getElementById('svcMenuCategory');
-    catSel.innerHTML = '<option value="">— Tidak terhubung —</option>' +
-      productCategories.map(c => `<option value="${c.id}">${escapeHtml(c.label)}</option>`).join('');
-    catSel.value = item.categoryId || '';
-    updateSvcMenuCount();
-    pfnServiceMenu.classList.add('open');
-    positionPfnServiceMenu(anchorEl);
-  }
-  const svcMenuSaveDebounced = debounce(() => savePortfolioPageV2(), 500);
-  document.getElementById('svcMenuFont').addEventListener('change', (e) => {
-    if(!pfnSvcMenuItem) return;
-    pfnSvcMenuItem.fontFamily = e.target.value;
-    applyServiceItemLive(pfnSvcMenuItem);
-    svcMenuSaveDebounced();
-  });
-  document.getElementById('svcMenuColor').addEventListener('input', (e) => {
-    if(!pfnSvcMenuItem) return;
-    pfnSvcMenuItem.color = e.target.value;
-    applyServiceItemLive(pfnSvcMenuItem);
-    svcMenuSaveDebounced();
-  });
-  document.getElementById('svcMenuColorClear').addEventListener('click', () => {
-    if(!pfnSvcMenuItem) return;
-    delete pfnSvcMenuItem.color;
-    document.getElementById('svcMenuColor').value = '#201f1d';
-    applyServiceItemLive(pfnSvcMenuItem);
-    svcMenuSaveDebounced();
-  });
-  document.getElementById('svcMenuCategory').addEventListener('change', (e) => {
-    if(!pfnSvcMenuItem) return;
-    pfnSvcMenuItem.categoryId = e.target.value || '';
-    updateSvcMenuCount();
-    applyServiceItemLive(pfnSvcMenuItem);
-    svcMenuSaveDebounced();
-  });
-  document.getElementById('svcMenuClose').addEventListener('click', closePfnServiceMenu);
-  document.addEventListener('mousedown', (e) => {
-    if(pfnServiceMenu.classList.contains('open') && !pfnServiceMenu.contains(e.target) && !e.target.closest('.pfn-service-menu-btn')){
-      closePfnServiceMenu();
-    }
-  });
 
   document.getElementById('pfnServiceAddBtn').addEventListener('click', () => {
     portfolioPageV2.services.push({ id:'sv-' + crypto.randomUUID().slice(0,8), title:'Layanan Baru', image:'https://placehold.co/500x650?text=Layanan+Baru' });
@@ -7677,8 +7426,6 @@
     renderBanners();
     loadGenericTextStyles();
     document.querySelectorAll('.editable-field').forEach(applyStyleToEditableField);
-    loadElementColors();
-    applyAllElementColors();
     applyBrandLogo();
     applyBrandAndProjectName();
     applyAppBgColor();
